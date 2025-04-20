@@ -12,10 +12,13 @@
 │   │   │   │
 │   │   │   ├── datalayer/          # Handle database
 │   │   │   │
-│   │   └── resources/
-│   │       ├── data/               # Data files
-│   │       │
-│   │       ├── styles/             # CSS files
+│   │   ├── resources/
+│   │   │   ├── data/               # Data files
+│   │   │   │
+│   │   │   ├── styles/             # CSS files
+│   │   │   │
+│   │   ├── application/
+│   │   │   ├── Main.java
 
 
 
