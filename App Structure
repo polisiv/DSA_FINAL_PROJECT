@@ -10,8 +10,12 @@
 │   │   │   │
 │   │   │   ├── view/               # Displays output
 │   │   │   │
-│   │   └── resources/              # Store data and other resources
-
+│   │   │   ├── datalayer/          # Handle database
+│   │   │   │
+│   │   └── resources/
+│   │       ├── data/               # Data files
+│   │       │
+│   │       ├── styles/             # CSS files
 
 
 
