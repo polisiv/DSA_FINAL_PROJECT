@@ -1,4 +1,4 @@
-package frontend;
+package java;
 
 public class FrontendMain {
 }

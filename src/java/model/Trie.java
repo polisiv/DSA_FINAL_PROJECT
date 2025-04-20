@@ -1,4 +1,4 @@
-package backend.dsa;
+package java.model;
 
 class Trie {
     private class TrieNode{
