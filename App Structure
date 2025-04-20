@@ -1,26 +1,10 @@
-backend/
-├── model/           ← Business logic and data structures (Flashcard, Task, etc.)
-│  
-│
-├── dsa/             ← DSA implementations (Trie, Sorting, Searching, etc.)
-│  
-│
-├── database/        ← File handling / simple DB logic (CSV, JSON, etc.)
+/Project Structure/
+├── controller/     # Handles user inputs, calls model, passes data to view
 │   
-│
-└── BackendMain.java ← (Optional) test/demo backend functionality
-
-frontend/
-├── controller/              ← JavaFX controllers (handle user interaction)
-│   
-│
-├── view/                    ← FXML files for each screen
-│   
-│
-├── component/               ← Optional: reusable UI components
-│   
-│
-├── style/                   ← CSS files for styling
-│   
-│
-└── FrontendMain.java        ← JavaFX entry point
+├── model/          # Data structure & algorithms
+│                 
+├── modelservice/   # Logic using the model
+│              
+├── view/           # Displays output
+│              
+├── resource/       # Store data and other resources
