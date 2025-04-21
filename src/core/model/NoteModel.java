@@ -1,7 +1,5 @@
 package core.model;
 
-import core.view.Note;
-
 public class NoteModel {
     private String content;
     private String title;

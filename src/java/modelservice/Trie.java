@@ -1,7 +1,14 @@
+<<<<<<<< HEAD:src/core/modelservice/Trie.java
 package core.modelservice;
+
+public class Trie {
+    private class TrieNode{
+========
+package java.modelservice;
 
 class Trie {
     private class TrieNode {
+>>>>>>>> 11a96434ab71c0e675e9c8d4549f16302013e1f0:src/java/modelservice/Trie.java
         TrieNode[] children = new TrieNode[26];
         boolean isEnd = false;
     }
@@ -14,8 +21,12 @@ class Trie {
 
     public void insert(String word) {
         TrieNode node = root;
+<<<<<<<< HEAD:src/core/modelservice/Trie.java
         word = word.toLowerCase();
+        for(char c : word.toCharArray()){
+========
         for (char c : word.toCharArray()) {
+>>>>>>>> 11a96434ab71c0e675e9c8d4549f16302013e1f0:src/java/modelservice/Trie.java
             int index = c - 'a';
             if (node.children[index] == null) {
                 node.children[index] = new TrieNode();
@@ -27,8 +38,12 @@ class Trie {
 
     public boolean search(String word) {
         TrieNode node = root;
+<<<<<<<< HEAD:src/core/modelservice/Trie.java
         word = word.toLowerCase();
+        for(char c : word.toCharArray()){
+========
         for (char c : word.toCharArray()) {
+>>>>>>>> 11a96434ab71c0e675e9c8d4549f16302013e1f0:src/java/modelservice/Trie.java
             int index = c - 'a';
             if (node.children[index] == null) {
                 return false;
