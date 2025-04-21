@@ -1,4 +1,4 @@
-package java.controller;
+package core.controller;
 
 public class NoteController {
 }

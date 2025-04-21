@@ -1,6 +1,6 @@
-package java.model;
+package core.model;
 
-class Trie {
+public class Trie {
     private class TrieNode{
         TrieNode[] children = new TrieNode[26];
         boolean isEnd = false;
@@ -13,6 +13,7 @@ class Trie {
 
     public void insert(String word) {
         TrieNode node = root;
+        word = word.toLowerCase();
         for(char c : word.toCharArray()){
             int index = c - 'a';
             if(node.children[index] == null){
@@ -25,6 +26,7 @@ class Trie {
 
     public boolean search(String word) {
         TrieNode node = root;
+        word = word.toLowerCase();
         for(char c : word.toCharArray()){
             int index = c - 'a';
             if(node.children[index] == null){

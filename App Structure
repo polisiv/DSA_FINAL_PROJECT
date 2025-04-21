@@ -1,12 +1,12 @@
 /Project Structure/
 ├── src/
 │   ├── main/
-│   │   ├── java/
+│   │   ├── core/
 │   │   │   ├── controller/         # Handles user inputs, calls model, passes data to view
 │   │   │   │
 │   │   │   ├── model/              # Data structure & algorithms
 │   │   │   │
-│   │   │   ├── modelservice/       # Logic using the model
+│   │   │   ├── modelservice/     g  # Logic using the model
 │   │   │   │
 │   │   │   ├── view/               # Displays output
 │   │   │   │
