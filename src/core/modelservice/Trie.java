@@ -1,4 +1,4 @@
-package core.model;
+package core.modelservice;
 
 public class Trie {
     private class TrieNode{
