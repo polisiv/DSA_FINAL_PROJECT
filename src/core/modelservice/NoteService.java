@@ -1,4 +1,4 @@
-package java.modelservice;
+package core.modelservice;
 
 public class NoteService {
 }

@@ -1,4 +1,4 @@
-package java.datalayer;
+package core.datalayer;
 
 public class NoteDatabase {
 }

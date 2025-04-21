@@ -1,4 +1,4 @@
-package java.view;
+package core.view;
 
 public class Note {
 }

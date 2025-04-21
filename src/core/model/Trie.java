@@ -1,4 +1,4 @@
-package java.model;
+package core.model;
 
 class Trie {
     private class TrieNode{
