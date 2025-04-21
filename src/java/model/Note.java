@@ -1,4 +1,5 @@
-package java.view;
+package java.model;
 
 public class Note {
+
 }

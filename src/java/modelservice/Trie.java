@@ -1,21 +1,22 @@
-package java.model;
+package java.modelservice;
 
 class Trie {
-    private class TrieNode{
+    private class TrieNode {
         TrieNode[] children = new TrieNode[26];
         boolean isEnd = false;
     }
 
     private TrieNode root;
+
     public Trie() {
         root = new TrieNode();
     }
 
     public void insert(String word) {
         TrieNode node = root;
-        for(char c : word.toCharArray()){
+        for (char c : word.toCharArray()) {
             int index = c - 'a';
-            if(node.children[index] == null){
+            if (node.children[index] == null) {
                 node.children[index] = new TrieNode();
             }
             node = node.children[index];
@@ -25,9 +26,9 @@ class Trie {
 
     public boolean search(String word) {
         TrieNode node = root;
-        for(char c : word.toCharArray()){
+        for (char c : word.toCharArray()) {
             int index = c - 'a';
-            if(node.children[index] == null){
+            if (node.children[index] == null) {
                 return false;
             }
             node = node.children[index];
@@ -37,9 +38,9 @@ class Trie {
 
     public boolean startsWith(String prefix) {
         TrieNode node = root;
-        for(char c : prefix.toCharArray()){
+        for (char c : prefix.toCharArray()) {
             int index = c - 'a';
-            if(node.children[index] == null){
+            if (node.children[index] == null) {
                 return false;
             }
             node = node.children[index];
