@@ -19,27 +19,4 @@ public class NoteController {
         // this.view.setUpdateNoteListener(e -> updateNote());
         // this.view.setDisplayNotesListener(e -> displayNotes());
     }
-
-    // private void addNote(){
-    // String note = view.getNote();
-    // model.addNote(note);
-    // view.displayNotes(model.getNotes());
-    // }
-    // private void deleteNote(){
-    // String note = view.getNote();
-    // model.deleteNote(note);
-    // view.displayNotes(model.getNotes());
-    // }
-    // private void updateNote(){
-    // String oldNote = view.getOldNote();
-    // String newNote = view.getNewNote();
-    // model.updateNote(oldNote, newNote);
-    // view.displayNotes(model.getNotes());
-    // }
-    // private void displayNotes(){
-    // view.displayNotes(model.getNotes());
-    // }
-    // create getter and setter methods for model variables -> control model object
-
-    // control view object
 }
