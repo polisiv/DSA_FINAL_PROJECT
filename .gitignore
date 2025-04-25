@@ -1,29 +1,93 @@
-### IntelliJ IDEA ###
+# === IntelliJ IDEA ===
+.idea/
+*.iml
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### Eclipse ###
-.apt_generated
+# === NetBeans ===
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+lib/CopyLibs/
+build/
+.nb-gradle/
+
+# === Eclipse ===
+.metadata/
 .classpath
 .factorypath
 .project
-.settings
-.springBeans
-.sts4-cache
+.settings/
+.apt_generated/
+.apt_generated_test/
+.sts4-cache/
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+.externalToolBuilders/
+.loadpath
+.recommenders/
+*.launch
+.target/
+.idea_modules/
+.cproject
+.autotools
+.buildpath
+.tern-project
+.texlipse/
+.cache-main
+.scala_dependencies
+.worksheet
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
+# === VSCode ===
 .vscode/
 
-### Mac OS ###
+# === Java ===
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+*.log
+hs_err_pid*
+replay_pid*
+
+# === macOS ===
 .DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+*.icloud
+
+# === Windows ===
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
