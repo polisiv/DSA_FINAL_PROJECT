@@ -6,7 +6,8 @@ public class NoteModel {
     private String title;
     private String date;    // Date of creation
     private String noteId;
-    private boolean isSaved;
+    private boolean isSaved = false;
+    private boolean isDeleted = false;
 
     public NoteModel(String content, String title) {
         this.content = content;
@@ -38,5 +39,21 @@ public class NoteModel {
 
     public String getNoteId(){
         return noteId;
+    }
+
+    public boolean isSaved() {
+        return isSaved;
+    }
+
+    public void setSaved(boolean saved) {
+        isSaved = saved;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }
