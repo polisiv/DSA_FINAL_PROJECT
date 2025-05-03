@@ -50,17 +50,22 @@ public class NoteDatabase {
         }
     }
 
+    //this one will modify the source note if there is already a note
+    public void modifyNote(String id){
 
-
-
-    public static void main(String[] args) {
-        NoteDatabase dp = new NoteDatabase();
-//        dp.addNote("70v3.2","", """
-//               2""",false);
-        dp.readNote();
-//        HashMap<String,List<String>> test = dp.loadNote();
-//        test.forEach((s,v) -> System.out.println("KEY: " + s + " VALUE: " + v));
     }
+
+
+
+
+//    public static void main(String[] args) {
+//        NoteDatabase dp = new NoteDatabase();
+////        dp.addNote("70v3.2","", """
+////               2""",false);
+//        dp.readNote();
+////        HashMap<String,List<String>> test = dp.loadNote();
+////        test.forEach((s,v) -> System.out.println("KEY: " + s + " VALUE: " + v));
+//    }
 
 
     public void deleteNote(String id){
@@ -73,7 +78,7 @@ public class NoteDatabase {
 
     }
 
-    private HashMap<String,List<String>> loadNote(){
+    public HashMap<String,List<String>> loadNote(){
         try {
             List<String> lines = Files.readAllLines(file);
             List<String> temp = new ArrayList<>();
@@ -115,13 +120,23 @@ public class NoteDatabase {
     public void readNote(){
         try {
             List<String> lines = Files.readAllLines(file);
+            String currentId = null;
             boolean isEnd = false;
             for(var line : lines){
+                if(line.startsWith("ID")){
+                    currentId = line;
+                    continue;
+                }
                 if(line.equals("Delete: true")){
+                    currentId = null;
                     isEnd = true;
                 }if (line.contains("END")){
                     isEnd = false;
                 }else if(!isEnd){
+                    if(currentId != null){
+                        System.out.println(currentId);
+                        currentId = null;
+                    }
                     System.out.println(line);
                 }
             }

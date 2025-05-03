@@ -17,6 +17,10 @@ public class NoteModel {
         isSaved = true;
     }
 
+    public NoteModel(){
+
+    }
+
     public String getContent() {
         return content;
     }
