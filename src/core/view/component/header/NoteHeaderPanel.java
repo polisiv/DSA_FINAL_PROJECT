@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 
 public class NoteHeaderPanel extends javax.swing.JPanel {
@@ -22,11 +21,9 @@ public class NoteHeaderPanel extends javax.swing.JPanel {
         events = new ArrayList<>();
         setLayout(new MigLayout("fill, inset 0, alignx center, aligny top", "[]6[]", "[]"));
         addSpace(20);
-        addItem("1", 1);
         addItem("7", 7);
-        addSpace(50);
+        addItem("1", 1);
         addItem("6", 6);
-        addItem("0", 0);
         addSpace(20);
         repaint();
         revalidate();

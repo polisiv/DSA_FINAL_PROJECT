@@ -1,11 +1,11 @@
 package core.view.frame;
 
+import core.view.component.common.HeaderEvent;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
 public class MainFrame extends javax.swing.JFrame {
-
     public MainFrame() {
         setUndecorated(true);
         initComponents();
@@ -14,7 +14,29 @@ public class MainFrame extends javax.swing.JFrame {
 
         top.initWindowControlPanel(MainFrame.this, mainPanel);
         top.initDrag(MainFrame.this);
-        showView("search");
+        
+        top.searchHeader.addEvent(new HeaderEvent() {
+            @Override
+            public void buttonSelected(int index){
+                switch (index) {
+                    case 1 -> getView("note");
+                    case 2 -> System.out.println("Search");
+                    case 3 -> System.out.println("Filter");
+                    case 4 -> System.out.println("Theme changer");
+                }
+            }
+        });
+        top.noteHeader.addEvent(new HeaderEvent() {
+            @Override
+            public void buttonSelected(int index){
+                switch (index) {
+                    case 1 -> System.out.println("Show new notes");
+                    case 7 -> getView("search");
+                    case 6 -> System.out.println("Save");
+                }
+            }
+        });
+        getView("search");
 
         pack();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -87,17 +109,31 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
 
-    private void showView(String view) {
-        if (view.equals("search")) {
-            top.showSearchHeader();
-            body.showSearchPanel();
-        } else if (view.equals("note")) {
-            top.showNoteHeader();
-            body.showNotePanel();
-        } else {
-            System.out.println("Invalid view: " + view);
+    private void getView(String view) {
+        switch (view) {
+            case "search":
+                showSearchView();
+                break;
+            case "note":
+                showNoteView();
+                break;
+            default:
+                System.out.println("Invalid view: " + view);
+                break;
         }
     }
+    
+    private void showSearchView() {
+        top.showSearchHeader();
+        body.showSearchPanel();
+    }
+    
+    private void showNoteView() {
+        top.showNoteHeader();
+        body.showNotePanel();
+    }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private core.view.component.body.Body body;

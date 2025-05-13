@@ -1,15 +1,16 @@
 package core.view.component.header;
 
+import core.view.component.common.SearchTextField;
 import core.view.component.common.HeaderButton;
 import core.view.component.common.HeaderEvent;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+//import java.lang.classfile.CustomAttribute;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 
 public class SearchHeaderPanel extends javax.swing.JPanel {
@@ -23,8 +24,8 @@ public class SearchHeaderPanel extends javax.swing.JPanel {
         addSpace(20);
         addItem("1", 1);
         addItem("2", 2);
-        JTextField textField = new JTextField(40);
-        textField.setVisible(false);
+        SearchTextField textField = new SearchTextField(40);
+        textField.setVisible(true);
         add(textField, "w 130!, h 25!, gapleft 0");
         addItem("3", 3);
         addItem("4", 4);

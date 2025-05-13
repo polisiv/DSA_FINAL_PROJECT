@@ -1,8 +1,6 @@
 package core.view.component.body;
 
-import java.awt.Dimension;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 public class Body extends JPanel {
     SearchBodyPanel search = new SearchBodyPanel();

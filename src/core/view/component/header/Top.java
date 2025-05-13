@@ -1,5 +1,6 @@
 package core.view.component.header;
 
+import core.view.component.common.HeaderEvent;
 import javax.swing.*;
 import core.view.component.common.RoundPanel;
 import java.awt.BorderLayout;
@@ -11,10 +12,8 @@ import java.awt.event.MouseMotionAdapter;
 
 public class Top extends JPanel {
 
-    // private List<HeaderEvent> events;
-
-    private SearchHeaderPanel searchHeader = new SearchHeaderPanel();
-    private NoteHeaderPanel noteHeader = new NoteHeaderPanel();
+    public SearchHeaderPanel searchHeader = new SearchHeaderPanel();
+    public NoteHeaderPanel noteHeader = new NoteHeaderPanel();
     private int mouseX, mouseY;
 
     public Top() {

@@ -41,7 +41,7 @@ public class SearchBodyPanel extends javax.swing.JPanel {
         // });
 
         noteList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] titles = { "Shopping List", "Workout Plan", "Meeting Notes" };
+            String[] titles = { "Shopping List", "Workout Plan", "Meeting Notes", "Groceries", "Routine" };
 
             @Override
             public int getSize() {
