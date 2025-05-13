@@ -5,7 +5,6 @@ import core.view.component.common.HeaderButton;
 import core.view.component.common.HeaderEvent;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 //import java.lang.classfile.CustomAttribute;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +37,8 @@ public class SearchHeaderPanel extends javax.swing.JPanel {
         HeaderButton item = new HeaderButton();
         item.setImage(new ImageIcon(getClass().getResource("/core/view/icon/" + icon + ".png")).getImage(),
                 Color.WHITE);
-        item.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                runEvent(index);
-            }
+        item.addActionListener((ActionEvent ae) -> {
+            runEvent(index);
         });
         add(item, "w 50!, h 50!, center");
     }

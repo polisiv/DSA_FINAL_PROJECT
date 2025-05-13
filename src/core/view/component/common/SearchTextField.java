@@ -46,11 +46,11 @@ public class SearchTextField extends JTextField{
     public SearchTextField(int column) {
         super(column);
         setBorder(new EmptyBorder(1, 5, 1, 5));
-        
         setBackground(new Color(13, 27, 42));
         setForeground(new Color (224, 225, 221));
+        setCaretColor(new Color (224, 225, 221)); 
+        setSelectionColor(new Color(224, 225, 221));
         
-        setSelectionColor(new Color(76, 204, 255));
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
@@ -116,12 +116,12 @@ public class SearchTextField extends JTextField{
         double size;
         if (animateHinText) {
             if (show) {
-                size = 18 * (1 - location);
+                size = 24 * (1 - location);
             } else {
-                size = 18 * location;
+                size = 24 * location;
             }
         } else {
-            size = 18;
+            size = 24;
         }
         g2.drawString(labelText, in.right, (int) (in.top + textY + ft.getAscent() - size));
     }

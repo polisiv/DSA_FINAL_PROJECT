@@ -39,7 +39,7 @@ public class NoteList<E extends Object> extends JList<E> {
     public NoteList() {
         model = new DefaultListModel();
         super.setModel(model);
-        selectedColor = new Color(224, 225, 221);
+        selectedColor = new Color(204, 205, 201);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent me) {
