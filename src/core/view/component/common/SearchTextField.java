@@ -89,7 +89,7 @@ public class SearchTextField extends JTextField{
 
         };
         animator = new Animator(300, target);
-        animator.setResolution(0);
+        animator.setResolution(10);
         animator.setAcceleration(0.5f);
         animator.setDeceleration(0.5f);
     }

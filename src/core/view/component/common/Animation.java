@@ -13,7 +13,7 @@ public class Animation {
     public Animation(HeaderButton item) {
         this.item = item;
         this.animator = new Animator(200);
-        this.animator.setResolution(0);
+        this.animator.setResolution(10);
     }
 
     public void mouseEnter() {
