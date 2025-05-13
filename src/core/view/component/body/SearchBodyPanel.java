@@ -2,16 +2,15 @@ package core.view.component.body;
 
 import core.model.NoteModel;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractListModel;
 
 public class SearchBodyPanel extends javax.swing.JPanel {
 
     public SearchBodyPanel() {
         initComponents();
         setOpaque(false);
-    }
-
-    public void displayNotes(ArrayList<NoteModel> notes) {
-        noteList.displayNotes(notes);
     }
 
     @SuppressWarnings("unchecked")
@@ -21,38 +20,6 @@ public class SearchBodyPanel extends javax.swing.JPanel {
 
         jScrollPane2 = new javax.swing.JScrollPane();
         noteList = new core.view.component.common.NoteList<>();
-
-        // for when i have note service
-        // List<NoteModel> notes = noteService.getAllNotes();
-        // String[] titles = notes.stream()
-        // .map(NoteModel::getTitle)
-        // .toArray(String[]::new);
-
-        // noteList.setModel(new javax.swing.AbstractListModel<String>() {
-        // @Override
-        // public int getSize() {
-        // return titles.length;
-        // }
-
-        // @Override
-        // public String getElementAt(int i) {
-        // return titles[i];
-        // }
-        // });
-
-        noteList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] titles = { "Shopping List", "Workout Plan", "Meeting Notes", "Groceries", "Routine" };
-
-            @Override
-            public int getSize() {
-                return titles.length;
-            }
-
-            @Override
-            public String getElementAt(int i) {
-                return titles[i];
-            }
-        });
 
         jScrollPane2.setViewportView(noteList);
 
@@ -68,6 +35,6 @@ public class SearchBodyPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane2;
-    private core.view.component.common.NoteList<String> noteList;
+    public core.view.component.common.NoteList<String> noteList;
     // End of variables declaration//GEN-END:variables
 }

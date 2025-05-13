@@ -1,11 +1,17 @@
 package core.view.frame;
 
+import core.model.NoteModel;
 import core.view.component.common.HeaderEvent;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.List;
+
+import javax.swing.AbstractListModel;
 
 public class MainFrame extends javax.swing.JFrame {
+    private List<NoteModel> displayedNotes;
+
     public MainFrame() {
         setUndecorated(true);
         initComponents();
@@ -14,10 +20,10 @@ public class MainFrame extends javax.swing.JFrame {
 
         top.initWindowControlPanel(MainFrame.this, mainPanel);
         top.initDrag(MainFrame.this);
-        
+
         top.searchHeader.addEvent(new HeaderEvent() {
             @Override
-            public void buttonSelected(int index){
+            public void buttonSelected(int index) {
                 switch (index) {
                     case 1 -> getView("note");
                     case 2 -> System.out.println("Search");
@@ -28,7 +34,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         top.noteHeader.addEvent(new HeaderEvent() {
             @Override
-            public void buttonSelected(int index){
+            public void buttonSelected(int index) {
                 switch (index) {
                     case 1 -> System.out.println("Show new notes");
                     case 7 -> getView("search");
@@ -36,7 +42,6 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         });
-        getView("search");
 
         pack();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -44,6 +49,13 @@ public class MainFrame extends javax.swing.JFrame {
         int y = 0;
         setLocation(x, y);
     }
+    
+    public void initWithNotes(List<NoteModel> notes) {
+        this.displayedNotes = notes;
+        setNotes(notes);       // Initially show all
+        getView("search");        // show view
+    }
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
@@ -100,16 +112,7 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public static void main(String args[]) {
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainFrame().setVisible(true);
-            }
-        });
-    }
-
-    private void getView(String view) {
+    public void getView(String view) {
         switch (view) {
             case "search":
                 showSearchView();
@@ -122,18 +125,33 @@ public class MainFrame extends javax.swing.JFrame {
                 break;
         }
     }
-    
+
     private void showSearchView() {
         top.showSearchHeader();
+        setNotes(displayedNotes);
         body.showSearchPanel();
     }
-    
+
     private void showNoteView() {
         top.showNoteHeader();
         body.showNotePanel();
     }
-    
-    
+
+    public void setNotes(List<NoteModel> notes) {
+        this.displayedNotes = notes;
+
+        body.search.noteList.setModel(new AbstractListModel<>() {
+            @Override
+            public int getSize() {
+                return displayedNotes.size();
+            }
+
+            @Override
+            public String getElementAt(int i) {
+                return displayedNotes.get(i).getTitle();
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private core.view.component.body.Body body;

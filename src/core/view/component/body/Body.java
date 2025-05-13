@@ -1,12 +1,15 @@
 package core.view.component.body;
 
+import java.util.List;
 import javax.swing.JPanel;
 
 public class Body extends JPanel {
-    SearchBodyPanel search = new SearchBodyPanel();
-    NoteBodyPanel note = new NoteBodyPanel();
+    public SearchBodyPanel search;
+    public NoteBodyPanel note;
 
     public Body() {
+        search = new SearchBodyPanel();
+        note = new NoteBodyPanel();
         initComponents();
         setOpaque(false);
 
