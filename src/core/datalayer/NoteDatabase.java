@@ -70,9 +70,41 @@ public class NoteDatabase {
 //    }
 
 
-    public void deleteNote(String id){
-
-
+    public void deleteNote(String id) {
+        try {
+            List<String> lines = Files.readAllLines(file);
+            List<String> updatedLines = new ArrayList<>();
+            boolean isTargetNote = false;
+    
+            for (String line : lines) {
+                if (line.startsWith("ID: ")) {
+                    if (line.equals("ID: " + id)) {
+                        isTargetNote = true;
+                    } else {
+                        updatedLines.add(line);
+                    }
+                } else if (!isTargetNote) {
+                    updatedLines.add(line); 
+                } else if (line.contains("END")) {
+                    isTargetNote = false;
+                }
+            }
+    
+            Files.write(file, updatedLines);
+    
+            System.out.println("""
+                    ******************
+                    DELETE SUCCESSFULLY
+                    ******************
+                    """);
+    
+        } catch (IOException e) {
+            System.out.println("""
+                    ********************
+                    DELETE UNSUCCESSFULLY
+                    ********************
+                    """);
+        }
     }
 
     //clean up the db by creating new db to store remaining notes
