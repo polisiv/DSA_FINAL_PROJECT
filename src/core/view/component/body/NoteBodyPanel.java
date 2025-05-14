@@ -1,14 +1,12 @@
 package core.view.component.body;
 
 import core.view.component.common.TitleTextField;
-import java.awt.Color;
 
 public class NoteBodyPanel extends javax.swing.JPanel {
 
     public NoteBodyPanel() {
         initComponents();
-        setOpaque(true);
-        setBackground(new Color(224, 225, 221));
+        setOpaque(false);
     }
 
     @SuppressWarnings("unchecked")
