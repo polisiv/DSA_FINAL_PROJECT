@@ -2,17 +2,17 @@ package core.controller;
 
 import core.model.NoteModel;
 //import core.view.NoteView;
-import core.datalayer.NoteDatabase;
 import core.modelservice.NoteService;
 import core.view.frame.MainFrame;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class NoteController {
     private final MainFrame mainFrame;
     private final NoteService noteService;
 
-    private List<NoteModel> allNotes;
+    private Map<String, NoteModel> notesMap;
     private List<NoteModel> displayedNotes;
 
     public NoteController(MainFrame mainFrame, NoteService noteService) {
@@ -21,14 +21,8 @@ public class NoteController {
     }
 
     public void init() {
-        // allNotes = noteService.getAllNotes();
-        // displayedNotes = new ArrayList<>(allNotes);
-        List<NoteModel> displayedNotes = List.of(
-                new NoteModel("Buy milk and eggs", "Shopping List"),
-                new NoteModel("Leg day workout at 6PM", "Workout Plan"),
-                new NoteModel("Team sync: finalize roadmap", "Meeting Notes"),
-                new NoteModel("Fruits: apples, bananas, oranges", "Groceries"),
-                new NoteModel("Morning routine: read, run, journal", "Routine"));
+        notesMap = noteService.getAllNotes();
+        List<NoteModel> displayedNotes = new ArrayList<>(notesMap.values());
         mainFrame.initWithNotes(displayedNotes);
     }
 

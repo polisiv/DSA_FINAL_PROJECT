@@ -91,9 +91,6 @@ public class NoteList<E extends Object> extends JList<E> {
             public Component getListCellRendererComponent(JList<?> jList, Object o, int index, boolean selected,
                     boolean focus) {
                 ListItem item = new ListItem(NoteList.this.getFont(), o + "");
-                // NoteModel note = (NoteModel) o;
-                // ListItem item = new ListItem(NoteList.this.getFont(), note.getTitle());
-
                 if (index == movingIndex) {
                     item.setItemColor(selectedColor);
                     if (mx <= deleteAble) {
@@ -112,10 +109,12 @@ public class NoteList<E extends Object> extends JList<E> {
 
     @Override
     public void setModel(ListModel<E> lm) {
+        model.clear(); 
         for (int i = 0; i < lm.getSize(); i++) {
             model.addElement(lm.getElementAt(i));
         }
     }
+
 
     public void addItem(Object obj) {
         model.addElement(obj);

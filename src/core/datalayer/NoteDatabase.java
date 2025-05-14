@@ -10,7 +10,9 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NoteDatabase {
     private final String PATH = "src/resource/database/Note.txt";
@@ -117,37 +119,56 @@ public class NoteDatabase {
         }
     }
 
-    public void readNote(){
-        try {
-            List<String> lines = Files.readAllLines(file);
-            String currentId = null;
-            boolean isEnd = false;
-            for(var line : lines){
-                if(line.startsWith("ID")){
-                    currentId = line;
-                    continue;
+    public Map<String, NoteModel> getAllNotes() {
+    Map<String, NoteModel> notes = new LinkedHashMap<>();
+
+    try {
+        List<String> lines = Files.readAllLines(file);
+        String currentId = null;
+        boolean isDeleted = false;
+        String title = null;
+        StringBuilder contentBuilder = null;
+        boolean readingContent = false;
+
+        for (String line : lines) {
+            if (line.startsWith("ID: ")) {
+                currentId = line.substring(4).trim();
+                isDeleted = false;
+                title = null;
+                contentBuilder = new StringBuilder();
+                readingContent = false;
+            } else if (line.startsWith("Delete: ")) {
+                isDeleted = line.equals("Delete: true");
+            } else if (line.startsWith("Title: ")) {
+                title = line.substring(7).trim();
+            } else if (line.startsWith("Content: ")) {
+                readingContent = true;
+                contentBuilder.append(line.substring(9).trim()).append("\n");
+            } else if (line.startsWith("==============END==============")) {
+                readingContent = false;
+                if (!isDeleted && currentId != null && title != null && contentBuilder != null) {
+                    String content = contentBuilder.toString().strip();
+                    notes.put(currentId, new NoteModel(title, content));
                 }
-                if(line.equals("Delete: true")){
-                    currentId = null;
-                    isEnd = true;
-                }if (line.contains("END")){
-                    isEnd = false;
-                }else if(!isEnd){
-                    if(currentId != null){
-                        System.out.println(currentId);
-                        currentId = null;
-                    }
-                    System.out.println(line);
-                }
+                // reset
+                currentId = null;
+                isDeleted = false;
+                title = null;
+                contentBuilder = null;
+            } else if (readingContent && contentBuilder != null) {
+                contentBuilder.append(line).append("\n");
             }
-        } catch (IOException e) {
-            System.out.println("""
-                    *****************
-                    NOT CONTENT FOUND
-                    *****************
-                    """
-            );
         }
 
+    } catch (IOException e) {
+        System.out.println("""
+                *****************
+                NO CONTENT FOUND
+                *****************
+                """);
     }
+
+    return notes;
+}
+
 }
