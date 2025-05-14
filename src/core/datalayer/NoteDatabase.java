@@ -1,4 +1,153 @@
 package core.datalayer;
 
+import core.model.NoteModel;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
 public class NoteDatabase {
+    private final String PATH = "src/resource/database/Note.txt";
+    static int quantity = 0;
+    private final Path file = Path.of(PATH);
+    private static HashMap<String, List<String>> noteQuerry = new HashMap<>();
+
+    public NoteDatabase(){
+
+    }
+    public void addNote(String id, String title, String content, boolean isDeleted){
+        String note = """
+                        ID: %s
+                        Delete: %s
+                        =============START=============
+                        Title: %s
+                        Content: %s
+                        ==============END==============
+                        """.formatted(id, isDeleted ? "true" : "false",title != null && !title.isEmpty() ? title : "N/A" ,content);
+        if(Files.isWritable(file)){
+            try {
+                Files.writeString(file, note, StandardOpenOption.APPEND
+                );
+                System.out.println("""
+                   *******************
+                   MODIFY SUCCESSFULLY
+                   *******************
+                   """);
+                quantity++;
+            } catch (IOException e) {
+                System.out.println("""
+                   *********************
+                   MODIFY UNSUCCESSFULLY
+                   *********************
+                   """);
+            }
+        }
+    }
+
+    //this one will modify the source note if there is already a note
+    public void modifyNote(String id){
+
+    }
+
+
+
+
+//    public static void main(String[] args) {
+//        NoteDatabase dp = new NoteDatabase();
+////        dp.addNote("70v3.2","", """
+////               2""",false);
+//        dp.readNote();
+////        HashMap<String,List<String>> test = dp.loadNote();
+////        test.forEach((s,v) -> System.out.println("KEY: " + s + " VALUE: " + v));
+//    }
+
+
+    public void deleteNote(String id){
+
+
+    }
+
+    //clean up the db by creating new db to store remaining notes
+    public void cleanUp(){
+
+    }
+
+    public HashMap<String,List<String>> loadNote(){
+        try {
+            List<String> lines = Files.readAllLines(file);
+            List<String> temp = new ArrayList<>();
+            String currentId = null;
+            for (String line : lines) {
+                if (line.startsWith("ID: ")) {
+                    // Save the previous note if it exists
+                    if (currentId != null && !temp.isEmpty()) {
+                        noteQuerry.put(currentId, new ArrayList<>(temp));
+                    }
+                    // Start a new note
+                    currentId = line;
+                    temp.clear();
+                }
+                temp.add(line);
+
+                if (line.contains("END")) {
+                    // Save the current note
+                    if (currentId != null) {
+                        noteQuerry.put(currentId, new ArrayList<>(temp));
+                    }
+                    temp.clear();
+                    currentId = null;
+                }
+            }
+
+            return noteQuerry;
+        } catch (IOException e) {
+            System.out.println("""
+                ****************
+                NO CONTENT FOUND
+                ****************
+                """
+            );
+            return new HashMap<>();
+        }
+    }
+
+    public void readNote(){
+        try {
+            List<String> lines = Files.readAllLines(file);
+            String currentId = null;
+            boolean isEnd = false;
+            for(var line : lines){
+                if(line.startsWith("ID")){
+                    currentId = line;
+                    continue;
+                }
+                if(line.equals("Delete: true")){
+                    currentId = null;
+                    isEnd = true;
+                }if (line.contains("END")){
+                    isEnd = false;
+                }else if(!isEnd){
+                    if(currentId != null){
+                        System.out.println(currentId);
+                        currentId = null;
+                    }
+                    System.out.println(line);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("""
+                    *****************
+                    NOT CONTENT FOUND
+                    *****************
+                    """
+            );
+        }
+
+    }
 }
