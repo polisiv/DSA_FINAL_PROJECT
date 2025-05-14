@@ -1,22 +1,31 @@
 package core.modelservice;
 
+import java.util.List;
+
 class Trie {
     private class TrieNode {
-        TrieNode[] children = new TrieNode[26];
+        TrieNode[] children = new TrieNode[94]; // 32-125
         boolean isEnd = false;
     }
 
     private TrieNode root;
 
-    public Trie() {
+    public Trie(String content) {
+        this();
+        insert(content);
+    }
+
+    public Trie(){
         root = new TrieNode();
     }
 
     public void insert(String word) {
         TrieNode node = root;
-        word = word.toLowerCase();
         for (char c : word.toCharArray()) {
-            int index = c - 'a';
+            if (c < ' ' || c > '~') { // Validate character range
+                throw new IllegalArgumentException("Character out of supported range: " + c);
+            }
+            int index = c - ' ';
             if (node.children[index] == null) {
                 node.children[index] = new TrieNode();
             }
@@ -27,9 +36,11 @@ class Trie {
 
     public boolean search(String word) {
         TrieNode node = root;
-        word = word.toLowerCase();
         for (char c : word.toCharArray()) {
-            int index = c - 'a';
+            if (c < ' ' || c > '~') { // Validate character range
+                throw new IllegalArgumentException("Character out of supported range: " + c);
+            }
+            int index = c - ' '; // To get the appropriate index for the array in the trie node
             if (node.children[index] == null) {
                 return false;
             }
@@ -41,7 +52,10 @@ class Trie {
     public boolean startsWith(String prefix) {
         TrieNode node = root;
         for (char c : prefix.toCharArray()) {
-            int index = c - 'a';
+            if (c < ' ' || c > '~') { // Validate character range
+                throw new IllegalArgumentException("Character out of supported range: " + c);
+            }
+            int index = c - ' ';
             if (node.children[index] == null) {
                 return false;
             }
