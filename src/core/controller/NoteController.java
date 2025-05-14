@@ -1,42 +1,48 @@
 package core.controller;
 
 import core.model.NoteModel;
-import core.view.NoteView;
+//import core.view.NoteView;
+import core.datalayer.NoteDatabase;
+import core.modelservice.NoteService;
+import core.view.frame.MainFrame;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NoteController {
-    private NoteModel model;
-    private NoteView view;
+    private final MainFrame mainFrame;
+    private final NoteService noteService;
 
-    public NoteController(NoteModel model, NoteView view) {
-        this.model = model;
-        this.view = view;
+    private List<NoteModel> allNotes;
+    private List<NoteModel> displayedNotes;
 
-        // this.view.setAddNoteListener(e -> addNote());
-        // this.view.setDeleteNoteListener(e -> deleteNote());
-        // this.view.setUpdateNoteListener(e -> updateNote());
-        // this.view.setDisplayNotesListener(e -> displayNotes());
+    public NoteController(MainFrame mainFrame, NoteService noteService) {
+        this.mainFrame = mainFrame;
+        this.noteService = noteService;
     }
 
-    // private void addNote(){
-    // String note = view.getNote();
-    // model.addNote(note);
-    // view.displayNotes(model.getNotes());
-    // }
-    // private void deleteNote(){
-    // String note = view.getNote();
-    // model.deleteNote(note);
-    // view.displayNotes(model.getNotes());
-    // }
-    // private void updateNote(){
-    // String oldNote = view.getOldNote();
-    // String newNote = view.getNewNote();
-    // model.updateNote(oldNote, newNote);
-    // view.displayNotes(model.getNotes());
-    // }
-    // private void displayNotes(){
-    // view.displayNotes(model.getNotes());
-    // }
-    // create getter and setter methods for model variables -> control model object
+    public void init() {
+        //allNotes = noteService.getAllNotes();
+        //displayedNotes = new ArrayList<>(allNotes);
+        List<NoteModel> displayedNotes = List.of(
+            new NoteModel("Buy milk and eggs", "Shopping List"),
+            new NoteModel("Leg day workout at 6PM", "Workout Plan"),
+            new NoteModel("Team sync: finalize roadmap", "Meeting Notes"),
+            new NoteModel("Fruits: apples, bananas, oranges", "Groceries"),
+            new NoteModel("Morning routine: read, run, journal", "Routine")
+        );
+        mainFrame.initWithNotes(displayedNotes);
+    }
 
-    // control view object
+//    public void search(String query) {
+//        if (query == null || query.isBlank()) {
+//            displayedNotes = allNotes;
+//        } else {
+//            displayedNotes = allNotes.stream()
+//                .filter(note -> note.getTitle().toLowerCase().contains(query.toLowerCase())
+//                             || note.getContent().toLowerCase().contains(query.toLowerCase()))
+//                .toList();
+//        }
+//        mainFrame.setNotes(displayedNotes);
+//    }
+//}
 }

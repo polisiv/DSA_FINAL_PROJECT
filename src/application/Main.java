@@ -1,7 +1,21 @@
 package application;
 
+import core.controller.NoteController;
+import core.model.NoteModel;
+import core.modelservice.NoteService;
+import core.view.frame.MainFrame;
+
+import javax.swing.*;
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("This is the DSA project");
+        SwingUtilities.invokeLater(() -> {
+            MainFrame mainFrame = new MainFrame();
+            NoteService noteService = new NoteService(); 
+            NoteController controller = new NoteController(mainFrame, noteService);
+            controller.init();
+            mainFrame.setVisible(true);
+        });
     }
 }
