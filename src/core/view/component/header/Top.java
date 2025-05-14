@@ -1,6 +1,5 @@
 package core.view.component.header;
 
-import core.view.component.common.HeaderEvent;
 import javax.swing.*;
 import core.view.component.common.RoundPanel;
 import java.awt.BorderLayout;

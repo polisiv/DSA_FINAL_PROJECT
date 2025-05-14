@@ -3,9 +3,8 @@ package core.view.component.header;
 import core.view.component.common.SearchTextField;
 import core.view.component.common.HeaderButton;
 import core.view.component.common.HeaderEvent;
-import java.awt.Color;
+import core.view.uiconfig.Config;
 import java.awt.event.ActionEvent;
-//import java.lang.classfile.CustomAttribute;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -20,15 +19,15 @@ public class SearchHeaderPanel extends javax.swing.JPanel {
         initComponents();
         events = new ArrayList<>();
         setLayout(new MigLayout("fill, inset 0, alignx center, aligny top", "[]6[]", "[]"));
-        addSpace(20);
-        addItem("1", 1);
-        addItem("2", 2);
-        SearchTextField textField = new SearchTextField(40);
+        addSpace(Config.HEADER_BLANK_SPACE);
+        addItem(Config.ADD_NOTE_ICON, Config.ADD_NOTE_EVENT_INDEX);
+        addItem(Config.SEARCH_ICON, Config.SEARCH_EVENT_INDEX);
+        SearchTextField textField = new SearchTextField(Config.SEARCH_TEXT_FIELD_LENGTH);
         textField.setVisible(true);
         add(textField, "w 130!, h 25!, gapleft 0");
-        addItem("3", 3);
-        addItem("4", 4);
-        addSpace(20);
+        addItem(Config.FILTER_ICON, Config.FILTER_EVENT_INDEX);
+        addItem(Config.SETTING_ICON, Config.SETTING_EVENT_INDEX);
+        addSpace(Config.HEADER_BLANK_SPACE);
         repaint();
         revalidate();
     }
@@ -36,7 +35,7 @@ public class SearchHeaderPanel extends javax.swing.JPanel {
     private void addItem(String icon, int index) {
         HeaderButton item = new HeaderButton();
         item.setImage(new ImageIcon(getClass().getResource("/core/view/icon/" + icon + ".png")).getImage(),
-                Color.WHITE);
+                Config.WHITE);
         item.addActionListener((ActionEvent ae) -> {
             runEvent(index);
         });

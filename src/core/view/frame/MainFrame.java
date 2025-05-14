@@ -2,7 +2,7 @@ package core.view.frame;
 
 import core.model.NoteModel;
 import core.view.component.common.HeaderEvent;
-import java.awt.Color;
+import core.view.uiconfig.Config;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.List;
@@ -15,8 +15,8 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         setUndecorated(true);
         initComponents();
-        setBackground(new Color(0, 0, 0, 0));
-        getContentPane().setBackground(new Color(0, 0, 0, 0));
+        setBackground(Config.TRANSPARENT_BLACK);
+        getContentPane().setBackground(Config.TRANSPARENT_BLACK);
 
         top.initWindowControlPanel(MainFrame.this, mainPanel);
         top.initDrag(MainFrame.this);
@@ -49,13 +49,12 @@ public class MainFrame extends javax.swing.JFrame {
         int y = 0;
         setLocation(x, y);
     }
-    
+
     public void initWithNotes(List<NoteModel> notes) {
         this.displayedNotes = notes;
-        setNotes(notes);       // Initially show all
-        getView("search");        // show view
+        setNotes(notes); // Initially show all
+        getView("search"); // show view
     }
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
@@ -71,9 +70,9 @@ public class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        mainPanel.setBackground(new java.awt.Color(13, 27, 42));
+        mainPanel.setBackground(Config.DARKEST_BLUE);
 
-        top.setPreferredSize(new java.awt.Dimension(400, 70));
+        top.setPreferredSize(Config.TOP_PREFERRED_SIZE);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);

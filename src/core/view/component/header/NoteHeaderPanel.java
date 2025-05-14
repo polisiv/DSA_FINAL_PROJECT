@@ -2,7 +2,7 @@ package core.view.component.header;
 
 import core.view.component.common.HeaderButton;
 import core.view.component.common.HeaderEvent;
-import java.awt.Color;
+import core.view.uiconfig.Config;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +19,11 @@ public class NoteHeaderPanel extends javax.swing.JPanel {
         setOpaque(false);
         events = new ArrayList<>();
         setLayout(new MigLayout("fill, inset 0, alignx center, aligny top", "[]6[]", "[]"));
-        addSpace(20);
-        addItem("7", 7);
-        addItem("1", 1);
-        addItem("6", 6);
-        addSpace(20);
+        addSpace(Config.HEADER_BLANK_SPACE);
+        addItem(Config.GO_BACK_ICON, Config.GO_BACK_EVENT_INDEX);
+        addItem(Config.ADD_NOTE_ICON, Config.ADD_NOTE_EVENT_INDEX);
+        addItem(Config.SAVE_ICON, Config.SAVE_EVENT_INDEX);
+        addSpace(Config.HEADER_BLANK_SPACE);
         repaint();
         revalidate();
     }
@@ -31,7 +31,7 @@ public class NoteHeaderPanel extends javax.swing.JPanel {
     private void addItem(String icon, int index) {
         HeaderButton item = new HeaderButton();
         item.setImage(new ImageIcon(getClass().getResource("/core/view/icon/" + icon + ".png")).getImage(),
-                Color.WHITE);
+                Config.WHITE);
         item.addActionListener((ActionEvent ae) -> {
             runEvent(index);
         });
