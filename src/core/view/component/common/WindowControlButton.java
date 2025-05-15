@@ -1,18 +1,17 @@
 package core.view.component.common;
 
-import java.awt.Cursor;
+import core.view.uiconfig.Config;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import javax.swing.JButton;
-import javax.swing.border.EmptyBorder;
 
 public class WindowControlButton extends JButton {
     
     public WindowControlButton() {
         setContentAreaFilled(false);
-        setBorder(new EmptyBorder(6, 6, 6, 6));
-        setCursor(new Cursor(Cursor.HAND_CURSOR));
+        setBorder(Config.WINDOW_CONTROL_BUTTON_BORDER);
+        setCursor(Config.WINDOW_CONTROL_BUTTON_CURSOR);
     }
 
     @Override

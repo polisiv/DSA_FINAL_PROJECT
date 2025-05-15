@@ -1,6 +1,6 @@
 package core.view.component.common;
 
-import java.awt.Color;
+import core.view.uiconfig.Config;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -12,7 +12,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
@@ -27,29 +26,20 @@ public class SearchTextField extends JTextField{
         this.labelText = labelText;
     }
 
-    public Color getLineColor() {
-        return lineColor;
-    }
-
-    public void setLineColor(Color lineColor) {
-        this.lineColor = lineColor;
-    }
-
     private final Animator animator;
     private boolean animateHinText = true;
     private float location;
     private boolean show;
     private boolean mouseOver = false;
-    private String labelText = "Search";
-    private Color lineColor = new Color(119, 141, 169);
+    private String labelText = Config.SEARCH_TEXT_FIELD_LABEL;
     
     public SearchTextField(int column) {
         super(column);
-        setBorder(new EmptyBorder(1, 5, 1, 5));
-        setBackground(new Color(13, 27, 42));
-        setForeground(new Color (224, 225, 221));
-        setCaretColor(new Color (224, 225, 221)); 
-        setSelectionColor(new Color(224, 225, 221));
+        setBorder(Config.TEXT_FIELD_BORDER);
+        setBackground(Config.DARKEST_BLUE);
+        setForeground(Config.LIGHT_GRAY);
+        setCaretColor(Config.LIGHT_GRAY); 
+        setSelectionColor(Config.LIGHT_GRAY);
         
         addMouseListener(new MouseAdapter() {
             @Override
@@ -88,10 +78,10 @@ public class SearchTextField extends JTextField{
             }
 
         };
-        animator = new Animator(300, target);
-        animator.setResolution(10);
-        animator.setAcceleration(0.5f);
-        animator.setDeceleration(0.5f);
+        animator = new Animator(Config.ANIMATOR_DURATION, target);
+        animator.setResolution(Config.ANIMATOR_RESOLUTION);
+        animator.setAcceleration(Config.ANIMATOR_ACCELERATION);
+        animator.setDeceleration(Config.ANIMATOR_DECELERATION);
     }
     
     private void showing(boolean action) {
@@ -108,7 +98,7 @@ public class SearchTextField extends JTextField{
     
     private void createHintText(Graphics2D g2) {
         Insets in = getInsets();
-        g2.setColor(new Color(150, 150, 150));
+        g2.setColor(Config.WHITE);
         FontMetrics ft = g2.getFontMetrics();
         Rectangle2D r2 = ft.getStringBounds(labelText, g2);
         double height = getHeight() - in.top - in.bottom;
@@ -130,7 +120,7 @@ public class SearchTextField extends JTextField{
         if (isFocusOwner()) {
             double width = getWidth() - 4;
             int height = getHeight();
-            g2.setColor(lineColor);
+            g2.setColor(Config.LIGHTER_BLUE);
             double size;
             if (show) {
                 size = width * (1 - location);
@@ -159,9 +149,9 @@ public class SearchTextField extends JTextField{
         int width = getWidth();
         int height = getHeight();
         if (mouseOver) {
-            g2.setColor(lineColor);
+            g2.setColor(Config.LIGHTER_BLUE);
         } else {
-            g2.setColor(new Color(150, 150, 150));
+            g2.setColor(Config.WHITE);
         }
         g2.fillRect(2, height - 1, width - 4, 1);
         createHintText(g2);

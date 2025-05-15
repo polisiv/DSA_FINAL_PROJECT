@@ -136,20 +136,24 @@ public class MainFrame extends javax.swing.JFrame {
         body.showNotePanel();
     }
 
+    // public void setNotes(List<NoteModel> notes) {
+    // this.displayedNotes = notes;
+
+    // body.search.noteList.setModel(new AbstractListModel<>() {
+    // @Override
+    // public int getSize() {
+    // return displayedNotes.size();
+    // }
+
+    // @Override
+    // public String getElementAt(int i) {
+    // return displayedNotes.get(i).getTitle();
+    // }
+    // });
+    // }
     public void setNotes(List<NoteModel> notes) {
         this.displayedNotes = notes;
-
-        body.search.noteList.setModel(new AbstractListModel<>() {
-            @Override
-            public int getSize() {
-                return displayedNotes.size();
-            }
-
-            @Override
-            public String getElementAt(int i) {
-                return displayedNotes.get(i).getTitle();
-            }
-        });
+        body.search.noteList.displayNotes(notes);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

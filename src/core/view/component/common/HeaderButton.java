@@ -1,5 +1,6 @@
 package core.view.component.common;
    
+import core.view.uiconfig.Config;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -35,13 +36,11 @@ public class HeaderButton extends JButton {
         // Draw the original image onto the buffered image
         g2d.drawImage(image, 0, 0, null);
 
-        // Apply white tint using AlphaComposite
-        g2d.setComposite(AlphaComposite.SrcAtop);  // Preserve transparency
-        g2d.setColor(color);                 // Tint color (white)
+        g2d.setComposite(AlphaComposite.SrcAtop);  
+        g2d.setColor(color);  
         g2d.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
         g2d.dispose();
 
-        // Store the recolored image
         this.image = bufferedImage;
     }
 
@@ -56,7 +55,7 @@ public class HeaderButton extends JButton {
 
     private final Animation animation;
     private Image image;
-    private Dimension imageSize = new Dimension(22, 22);
+    private Dimension imageSize = Config.HEADER_IMAGE_INACTIVE_SIZE;
 
     public HeaderButton() {
         setContentAreaFilled(false);
@@ -65,12 +64,17 @@ public class HeaderButton extends JButton {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
-                animation.mouseEnter();
+                animation.mouseEntered();
             }
 
             @Override
             public void mouseExited(MouseEvent me) {
-                animation.mouseExit();
+                animation.mouseExited();
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                animation.mouseExited();
             }
         });
     }

@@ -1,5 +1,6 @@
 package core.view.component.common;
 
+import core.view.uiconfig.Config;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -15,22 +16,22 @@ public class ListItem extends javax.swing.JPanel {
 
     private final MigLayout mig;
     private final JPanel panel = new JPanel();
-    private final Image binImage = new ImageIcon(getClass().getResource("/core/view/icon/0.png")).getImage();
+    private final Image binImage = new ImageIcon(getClass().getResource(Config.BIN_IMAGE_RESOURCE)).getImage();
     private boolean deleteAble;
 
     public ListItem() {
-        this(new Font("Helvetica", Font.PLAIN, 15), "Default Text");
+        this(Config.LIST_ITEM_FONT, "Default Text");
     }
 
     public ListItem(Font font, String text) {
         initComponents();
-        mig = new MigLayout("fillx", "0[fill]0", "0[]0");
+        mig = Config.LIST_ITEM_MIGLAYOUT;
         setLayout(mig);
         JLabel label = new JLabel(text);
         label.setFont(font);
-        label.setForeground(new Color(13, 27, 42));
-        panel.setBackground(new Color(224, 225, 221));
-        panel.setLayout(new MigLayout("fill, aligny center", "15[]", "fill"));
+        label.setForeground(Config.DARKEST_BLUE);
+        panel.setBackground(Config.LIGHT_GRAY);
+        panel.setLayout(Config.LIST_ITEM_PANEL_MIGLAYOUT);
         panel.add(label);
         this.add(panel, "h 40, w 100%");
     }
@@ -61,7 +62,7 @@ public class ListItem extends javax.swing.JPanel {
         mig.setComponentConstraints(panel, "x " + clampedX + ", h 40, w 100%");
 
         if (x < 0) {
-            setBackground(new Color(119, 141, 169));
+            setBackground(Config.LIGHTER_BLUE);
         }
     }
 

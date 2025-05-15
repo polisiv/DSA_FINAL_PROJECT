@@ -1,11 +1,5 @@
 package core.view.component.body;
 
-import core.model.NoteModel;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.AbstractListModel;
-
 public class SearchBodyPanel extends javax.swing.JPanel {
 
     public SearchBodyPanel() {
@@ -19,7 +13,8 @@ public class SearchBodyPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        noteList = new core.view.component.common.NoteList<>();
+        // noteList = new core.view.component.common.NoteList<>();
+        noteList = new core.view.component.common.NoteList();
 
         jScrollPane2.setViewportView(noteList);
 
@@ -35,6 +30,8 @@ public class SearchBodyPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane2;
-    public core.view.component.common.NoteList<String> noteList;
+    // public core.view.component.common.NoteList<String> noteList;
+    public core.view.component.common.NoteList noteList;
+
     // End of variables declaration//GEN-END:variables
 }

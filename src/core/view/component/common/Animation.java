@@ -1,5 +1,6 @@
 package core.view.component.common;
 
+import core.view.uiconfig.Config;
 import java.awt.Dimension;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -16,18 +17,18 @@ public class Animation {
         this.animator.setResolution(10);
     }
 
-    public void mouseEnter() {
+    public void mouseEntered() {
         stop();
         animator.removeTarget(target);
-        target = new PropertySetter(item, "imageSize", item.getImageSize(), new Dimension(25, 25));
+        target = new PropertySetter(item, "imageSize", item.getImageSize(), Config.HEADER_IMAGE_ACTIVE_SIZE);
         animator.addTarget(target);
         animator.start();
     }
 
-    public void mouseExit() {
+    public void mouseExited() {
         stop();
         animator.removeTarget(target);
-        target = new PropertySetter(item, "imageSize", item.getImageSize(), new Dimension(22, 22));
+        target = new PropertySetter(item, "imageSize", item.getImageSize(), Config.HEADER_IMAGE_INACTIVE_SIZE);
         animator.addTarget(target);
         animator.start();
     }
