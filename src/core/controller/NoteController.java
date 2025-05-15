@@ -21,14 +21,11 @@ public class NoteController {
     }
 
     public void init() {
-        // load notes
         notesMap = noteService.getAllNotes();
         displayedNotes = new ArrayList<>(notesMap.values());
 
-        // inject notes into view
         mainFrame.initWithNotes(displayedNotes);
 
-        // bind UI callbacks 
         bindUIEvents();
     }
 
@@ -61,14 +58,14 @@ public class NoteController {
             mainFrame.setNotes(filtered);
         });
 
-//        mainFrame.setOnDeleteNote(index -> {
-//            if (index >= 0 && index < displayedNotes.size()) {
-//                NoteModel note = displayedNotes.remove(index);
-//                note.setDeleted(true);
-//                notesMap.remove(note.getTitle());
-//                mainFrame.setNotes(displayedNotes);
-//            }
-//        });
+        mainFrame.setOnDeleteNote(note -> {
+            note.setDeleted(true);
+            displayedNotes.remove(note);
+            notesMap.remove(note.getTitle());
+            noteService.deleteNote(note.getNoteId());
+            mainFrame.setNotes(displayedNotes);
+        });
+
 
         mainFrame.setOnNoteSelected(index -> {
             NoteModel selectedNote = displayedNotes.get(index);

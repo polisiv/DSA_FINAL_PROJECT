@@ -28,8 +28,8 @@ public class NoteService {
         db.addNote(newNote.getNoteId(),newNote.getTitle(),newNote.getContent(), newNote.isDeleted());
     }
 
-    public void deleteNote(){
-
+    public void deleteNote(String id){
+        db.deleteNote(id);
     }
 
 

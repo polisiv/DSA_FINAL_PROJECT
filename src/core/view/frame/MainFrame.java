@@ -19,7 +19,9 @@ public class MainFrame extends javax.swing.JFrame {
     public void setOnSave(Runnable callback) { this.onSave = callback; }
     public void setOnNewNote(Runnable callback) { this.onNewNote = callback; }
     public void setOnSearch(Consumer<String> callback) { this.onSearch = callback; }
-    public void setOnDeleteNote(Consumer<Integer> callback) { this.onDeleteNote = callback; }
+    public void setOnDeleteNote(Consumer<NoteModel> callback) {
+        body.search.noteList.setOnDeleteNote(callback);
+    }
     public void setOnNoteSelected(Consumer<Integer> callback) { this.onNoteSelected = callback; }
 
 
