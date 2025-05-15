@@ -31,14 +31,16 @@ public class NoteController {
 
     private void bindUIEvents() {
         mainFrame.setOnSave(() -> {
-            //noteService.saveAllNotes(notesMap); // saving logic
+            NoteModel note = mainFrame.getCurrentNote();
+            noteService.saveNote(note);
         });
 
+
         mainFrame.setOnNewNote(() -> {
-            // new note logic
             NoteModel newNote = new NoteModel("", "Untitled Note");
             notesMap.put(newNote.getTitle(), newNote);
             displayedNotes.add(0, newNote);
+            noteService.saveNote(newNote);
             mainFrame.setNotes(displayedNotes);
             mainFrame.showNoteDetail(newNote);
         });
@@ -57,12 +59,29 @@ public class NoteController {
 
             mainFrame.setNotes(filtered);
         });
+        
+        mainFrame.setOnSearch(query -> {
+            if (query == null || query.isBlank()) {
+                mainFrame.setNotes(displayedNotes); // show all
+                return;
+            }
+
+            String lower = query.toLowerCase();
+
+            List<NoteModel> filtered = displayedNotes.stream()
+                .filter(note -> note.getTitle().toLowerCase().contains(lower)
+                             || note.getContent().toLowerCase().contains(lower))
+                .toList();
+
+            mainFrame.setNotes(filtered);
+        });
+
 
         mainFrame.setOnDeleteNote(note -> {
             note.setDeleted(true);
             displayedNotes.remove(note);
             notesMap.remove(note.getTitle());
-            noteService.deleteNote(note.getNoteId());
+            noteService.deleteNote(note);
             mainFrame.setNotes(displayedNotes);
         });
 

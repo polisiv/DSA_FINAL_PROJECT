@@ -52,14 +52,6 @@ public class NoteDatabase {
         }
     }
 
-    //this one will modify the source note if there is already a note
-    public void modifyNote(String id){
-
-    }
-
-
-
-
 //    public static void main(String[] args) {
 //        NoteDatabase dp = new NoteDatabase();
 ////        dp.addNote("70v3.2","", """

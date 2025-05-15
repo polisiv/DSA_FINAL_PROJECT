@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.List;
 import java.util.function.Consumer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 
 public class MainFrame extends javax.swing.JFrame {
@@ -48,6 +50,18 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         });
+        top.searchHeader.textField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { emit(); }
+            public void removeUpdate(DocumentEvent e) { emit(); }
+            public void changedUpdate(DocumentEvent e) { emit(); }
+
+            private void emit() {
+                if (onSearch != null) {
+                    onSearch.accept(top.searchHeader.textField.getText());
+                }
+            }
+        });
+
         top.noteHeader.addEvent(new HeaderEvent() {
             @Override
             public void buttonSelected(int index) {
@@ -71,7 +85,6 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
 
-
         pack();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = screenSize.width - getWidth();
@@ -86,8 +99,6 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -154,6 +165,10 @@ public class MainFrame extends javax.swing.JFrame {
     public void setNotes(List<NoteModel> notes) {
         this.displayedNotes = notes;
         body.search.noteList.displayNotes(notes);
+    }
+    
+    public NoteModel getCurrentNote() {
+        return body.note.getNote(); 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

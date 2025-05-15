@@ -25,4 +25,3 @@ Delete: false
 Title: Groceries
 Content: Fruits: apples, bananas, oranges
 ==============END==============
-

@@ -14,6 +14,7 @@ import net.miginfocom.swing.MigLayout;
 public class SearchHeaderPanel extends javax.swing.JPanel {
 
     private List<HeaderEvent> events;
+    public SearchTextField textField = new SearchTextField(Config.SEARCH_TEXT_FIELD_LENGTH);
 
     public SearchHeaderPanel() {
         initComponents();
@@ -22,7 +23,6 @@ public class SearchHeaderPanel extends javax.swing.JPanel {
         addSpace(Config.HEADER_BLANK_SPACE);
         addItem(Config.ADD_NOTE_ICON, Config.ADD_NOTE_EVENT_INDEX);
         addItem(Config.SEARCH_ICON, Config.SEARCH_EVENT_INDEX);
-        SearchTextField textField = new SearchTextField(Config.SEARCH_TEXT_FIELD_LENGTH);
         textField.setVisible(true);
         add(textField, "w 130!, h 25!, gapleft 0");
         addItem(Config.FILTER_ICON, Config.FILTER_EVENT_INDEX);

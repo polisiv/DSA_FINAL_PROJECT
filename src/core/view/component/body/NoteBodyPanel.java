@@ -38,6 +38,14 @@ public class NoteBodyPanel extends javax.swing.JPanel {
                 content.setText(note.getContent()); // e.g., JTextArea
                 date.setText(note.getDate());
         }
+        
+        public NoteModel getNote() {
+            currentNote.setTitle(title.getText());
+            currentNote.setContent(content.getText());
+
+            return currentNote;
+        }
+
 
         @SuppressWarnings("unchecked")
         // <editor-fold defaultstate="collapsed" desc="Generated

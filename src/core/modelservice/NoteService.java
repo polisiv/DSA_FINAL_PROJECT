@@ -10,10 +10,8 @@ import java.util.Map;
 public class NoteService {
     private List<Trie> notes = null;
     private NoteDatabase db;
-    private NoteModel note;
     public NoteService(NoteDatabase db){
         this.db = db;
-        note = new NoteModel();
     }
     public Map<String, NoteModel> getAllNotes(){
         return db.getAllNotes();
@@ -24,12 +22,15 @@ public class NoteService {
         HashMap<String,List<String>> query = db.loadNote();
     }
 
-    public void saveNote(NoteModel newNote){
-        db.addNote(newNote.getNoteId(),newNote.getTitle(),newNote.getContent(), newNote.isDeleted());
+    public void saveNote(NoteModel newNote){ 
+        // avoids having multiple notes if saved multiple times
+        db.deleteNote(newNote.getNoteId()); 
+        db.addNote(newNote.getNoteId(), newNote.getTitle(), newNote.getContent(), newNote.isDeleted()); 
     }
 
-    public void deleteNote(String id){
-        db.deleteNote(id);
+    public void deleteNote(NoteModel model){
+        model.setDeleted(true);
+        db.deleteNote(model.getNoteId());
     }
 
 
