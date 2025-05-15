@@ -6,10 +6,24 @@ import core.view.uiconfig.Config;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.List;
+import java.util.function.Consumer;
 
-import javax.swing.AbstractListModel;
 
 public class MainFrame extends javax.swing.JFrame {
+    private Runnable onNewNote;
+    private Runnable onSave;
+    private java.util.function.Consumer<Integer> onDeleteNote;
+    private java.util.function.Consumer<String> onSearch;
+    private java.util.function.Consumer<Integer> onNoteSelected;
+    
+    public void setOnSave(Runnable callback) { this.onSave = callback; }
+    public void setOnNewNote(Runnable callback) { this.onNewNote = callback; }
+    public void setOnSearch(Consumer<String> callback) { this.onSearch = callback; }
+    public void setOnDeleteNote(Consumer<Integer> callback) { this.onDeleteNote = callback; }
+    public void setOnNoteSelected(Consumer<Integer> callback) { this.onNoteSelected = callback; }
+
+
+
     private List<NoteModel> displayedNotes;
 
     public MainFrame() {
@@ -25,7 +39,7 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void buttonSelected(int index) {
                 switch (index) {
-                    case 1 -> getView("note");
+                    case 1 -> {if (onNewNote != null) onNewNote.run();}
                     case 2 -> System.out.println("Search");
                     case 3 -> System.out.println("Filter");
                     case 4 -> System.out.println("Theme changer");
@@ -36,12 +50,25 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void buttonSelected(int index) {
                 switch (index) {
-                    case 1 -> System.out.println("Show new notes");
-                    case 7 -> getView("search");
-                    case 6 -> System.out.println("Save");
+                    case 1 -> {if (onNewNote != null) onNewNote.run();}
+                    case 7 -> showSearchView();
+                    case 6 -> {if (onSave != null) onSave.run();}
                 }
             }
         });
+        
+        body.search.noteList.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                int index = body.search.noteList.locationToIndex(e.getPoint());
+
+                if (index >= 0 && onNoteSelected != null) {
+                    onNoteSelected.accept(index);
+                }
+            }
+        });
+
+
 
         pack();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -53,7 +80,7 @@ public class MainFrame extends javax.swing.JFrame {
     public void initWithNotes(List<NoteModel> notes) {
         this.displayedNotes = notes;
         setNotes(notes); // Initially show all
-        getView("search"); // show view
+        showSearchView(); // show view
     }
 
     @SuppressWarnings("unchecked")
@@ -111,46 +138,17 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void getView(String view) {
-        switch (view) {
-            case "search":
-                showSearchView();
-                break;
-            case "note":
-                showNoteView();
-                break;
-            default:
-                System.out.println("Invalid view: " + view);
-                break;
-        }
-    }
-
     private void showSearchView() {
         top.showSearchHeader();
         setNotes(displayedNotes);
         body.showSearchPanel();
     }
-
-    private void showNoteView() {
+    
+    public void showNoteDetail(NoteModel note) {
         top.showNoteHeader();
-        body.showNotePanel();
+        body.showNotePanel(note);
     }
 
-    // public void setNotes(List<NoteModel> notes) {
-    // this.displayedNotes = notes;
-
-    // body.search.noteList.setModel(new AbstractListModel<>() {
-    // @Override
-    // public int getSize() {
-    // return displayedNotes.size();
-    // }
-
-    // @Override
-    // public String getElementAt(int i) {
-    // return displayedNotes.get(i).getTitle();
-    // }
-    // });
-    // }
     public void setNotes(List<NoteModel> notes) {
         this.displayedNotes = notes;
         body.search.noteList.displayNotes(notes);

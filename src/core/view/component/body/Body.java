@@ -1,5 +1,6 @@
 package core.view.component.body;
 
+import core.model.NoteModel;
 import javax.swing.JPanel;
 
 public class Body extends JPanel {
@@ -11,18 +12,18 @@ public class Body extends JPanel {
         note = new NoteBodyPanel();
         initComponents();
         setOpaque(false);
-
         scrollPane.setViewportBorder(null);
-        showSearchPanel();
+       
     }
 
     public void showSearchPanel() {
         scrollPane.setViewportView(search);
     }
-
-    public void showNotePanel() {
+    public void showNotePanel(NoteModel model) {
+        note = new NoteBodyPanel(model); // ⚠ replaces old one
         scrollPane.setViewportView(note);
     }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
