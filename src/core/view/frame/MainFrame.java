@@ -1,10 +1,13 @@
 package core.view.frame;
 
 import core.model.NoteModel;
+import core.modelservice.NoteFilterType;
+import core.view.component.common.FilterPopupMenu;
 import core.view.component.common.HeaderEvent;
 import core.view.uiconfig.Config;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.event.DocumentEvent;
@@ -16,6 +19,7 @@ public class MainFrame extends javax.swing.JFrame {
     private java.util.function.Consumer<Integer> onDeleteNote;
     private java.util.function.Consumer<String> onSearch;
     private java.util.function.Consumer<Integer> onNoteSelected;
+    private java.util.function.Consumer<NoteFilterType> onFilterSelected;
 
     public void setOnSave(Runnable callback) {
         this.onSave = callback;
@@ -36,6 +40,11 @@ public class MainFrame extends javax.swing.JFrame {
     public void setOnNoteSelected(Consumer<Integer> callback) {
         this.onNoteSelected = callback;
     }
+    
+    public void setOnFilterSelected(Consumer<NoteFilterType> callback) {
+        this.onFilterSelected = callback;
+    }
+
 
     private List<NoteModel> displayedNotes;
 
@@ -59,21 +68,37 @@ public class MainFrame extends javax.swing.JFrame {
                             onNewNote.run();
                     }
                     case 2 -> System.out.println("Search");
-                    case 3 -> System.out.println("Filter");
+                    case 3 -> {
+                        FilterPopupMenu popup = new FilterPopupMenu(filterType -> {
+                            if (onFilterSelected != null) {
+                                onFilterSelected.accept(filterType);
+                            }
+                        });
+                        popup.show(top.searchHeader.filterButton, 0, top.searchHeader.filterButton.getHeight());
+                    }
                     case 4 -> {}
                 }
             }
         });
         top.searchHeader.setOnBlueThemeSelected(() -> {
             Config.setBlueTheme();
-            //SwingUtilities.updateComponentTreeUI(MainFrame.this);
             this.applyTheme();
         });
         top.searchHeader.setOnGreenThemeSelected(() -> {
             Config.setGreenTheme();
-            //SwingUtilities.updateComponentTreeUI(MainFrame.this);
             this.applyTheme();
         });
+        
+        setOnFilterSelected(filterType -> {
+            switch (filterType) {
+                case ALPHABETICAL_ASCENDING -> displayedNotes.sort(Comparator.comparing(NoteModel::getTitle));
+                case ALPHABETICAL_DESCENDING -> displayedNotes.sort(Comparator.comparing(NoteModel::getTitle).reversed());
+                case NEWEST_FIRST -> displayedNotes.sort(Comparator.comparing(NoteModel::getDate).reversed());
+                case OLDEST_FIRST -> displayedNotes.sort(Comparator.comparing(NoteModel::getDate));
+            }
+            setNotes(displayedNotes); // Refresh view
+        });
+
 
         top.searchHeader.textField.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {

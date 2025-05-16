@@ -19,6 +19,10 @@ public class SearchHeaderPanel extends javax.swing.JPanel {
     
     private Runnable onBlueThemeSelected;
     private Runnable onGreenThemeSelected;
+    
+    HeaderButton settingsButton;
+    public HeaderButton filterButton;
+
 
     public void setOnBlueThemeSelected(Runnable callback) {
         this.onBlueThemeSelected = callback;
@@ -38,10 +42,11 @@ public class SearchHeaderPanel extends javax.swing.JPanel {
         addItem(Config.SEARCH_ICON, Config.SEARCH_EVENT_INDEX);
         textField.setVisible(true);
         add(textField, "w 130!, h 25!, gapleft 0");
-        addItem(Config.FILTER_ICON, Config.FILTER_EVENT_INDEX);
         
-        HeaderButton settingsButton = addItem(Config.SETTING_ICON, Config.SETTING_EVENT_INDEX);
+        filterButton = addItem(Config.FILTER_ICON, Config.FILTER_EVENT_INDEX);
 
+        
+        settingsButton = addItem(Config.SETTING_ICON, Config.SETTING_EVENT_INDEX);
         ThemePopupMenu themePopup = new ThemePopupMenu(() -> {
             if (onBlueThemeSelected != null) onBlueThemeSelected.run();
         }, () -> {
