@@ -22,10 +22,10 @@ public class TitleTextField extends JTextField{
         super(column);
         setBorder(Config.TEXT_FIELD_BORDER);
         
-        setForeground(Config.DARKEST_BLUE);
+        setForeground(Config.DARKEST);
         setBackground(Config.WHITE);
         
-        setSelectionColor(Config.DARKER_BLUE);
+        setSelectionColor(Config.DARKER);
     }
 
     
@@ -35,12 +35,19 @@ public class TitleTextField extends JTextField{
         Graphics2D g2 = (Graphics2D) grphcs;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-        // the underline color
-        g2.setColor(Config.LIGHTER_BLUE);
-        // a 1px line at the bottom of the text field
+
+        g2.setColor(Config.LIGHTER);
+        
         int y = getHeight() - 1;
         g2.drawLine(0, y, 400-12, y);
         g2.dispose();
     }
-    
+
+    public void applyTheme() {
+        setForeground(Config.DARKEST);
+        setBackground(Config.WHITE);
+        setSelectionColor(Config.DARKER);
+        repaint();
+    }
+
 }

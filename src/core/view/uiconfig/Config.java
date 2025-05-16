@@ -10,13 +10,28 @@ import net.miginfocom.swing.MigLayout;
 public class Config {
     //color
     public static final Color WHITE = Color.WHITE;
-    public static final Color TRANSPARENT_BLACK = new Color(0, 0, 0, 0);
-    public static final Color DARKEST_BLUE = new Color(13, 27, 42);
-    public static final Color DARKER_BLUE = new Color(27, 38, 59);
-    public static final Color MIDDLE_BLUE = new Color(65, 90, 119);
-    public static final Color LIGHTER_BLUE = new Color(119, 141, 169);
     public static final Color LIGHT_GRAY = new Color(224, 225, 221);
     public static final Color DARKER_GRAY = new Color(204, 205, 201);
+    public static final Color TRANSPARENT_BLACK = new Color(0, 0, 0, 0);
+    //default color sets
+    public static Color DARKEST;
+    public static Color DARKER;
+    public static Color MIDDLE;
+    public static Color LIGHTER;
+    //color setter
+    public static void setBlueTheme() { 
+        DARKEST = new Color(13, 27, 42);
+        DARKER = new Color(27, 38, 59);
+        MIDDLE = new Color(65, 90, 119);
+        LIGHTER = new Color(119, 141, 169);
+    }
+    public static void setGreenTheme() {
+        DARKEST = new Color(33, 104, 105);
+        DARKER = new Color(33, 104, 105);
+        MIDDLE = new Color(73, 160, 120);
+        LIGHTER = new Color(156, 197, 161);
+    }
+    
     
     // other entities
     public static final Dimension TOP_PREFERRED_SIZE = new Dimension(400, 70);
@@ -30,6 +45,7 @@ public class Config {
     
     //text fields and text area
     public static final EmptyBorder TEXT_FIELD_BORDER = new EmptyBorder(1, 5, 1, 5);
+    public static final Font TITLE_TEXTFIELD_FONT = new Font("Helvetica Neue", 1, 18);
     public static final String SEARCH_TEXT_FIELD_LABEL = "Search";
     
     // length and space
@@ -38,7 +54,7 @@ public class Config {
     
     // animator
     public static int ANIMATOR_DURATION = 300;
-    public static int ANIMATOR_RESOLUTION = 10;
+    public static int ANIMATOR_RESOLUTION = 15;
     public static float ANIMATOR_ACCELERATION = 0.5f;
     public static float ANIMATOR_DECELERATION = 0.5f;
     

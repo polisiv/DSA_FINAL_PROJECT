@@ -1,7 +1,6 @@
 package core.view.component.common;
 
 import core.view.uiconfig.Config;
-import java.awt.Dimension;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;

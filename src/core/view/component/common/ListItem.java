@@ -2,6 +2,7 @@ package core.view.component.common;
 
 import core.view.uiconfig.Config;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -29,7 +30,7 @@ public class ListItem extends javax.swing.JPanel {
         setLayout(mig);
         JLabel label = new JLabel(text);
         label.setFont(font);
-        label.setForeground(Config.DARKEST_BLUE);
+        label.setForeground(Config.DARKEST);
         panel.setBackground(Config.LIGHT_GRAY);
         panel.setLayout(Config.LIST_ITEM_PANEL_MIGLAYOUT);
         panel.add(label);
@@ -41,7 +42,7 @@ public class ListItem extends javax.swing.JPanel {
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBackground(new java.awt.Color(224, 225, 221));
+        setBackground(Config.LIGHT_GRAY);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -62,7 +63,7 @@ public class ListItem extends javax.swing.JPanel {
         mig.setComponentConstraints(panel, "x " + clampedX + ", h 40, w 100%");
 
         if (x < 0) {
-            setBackground(Config.LIGHTER_BLUE);
+            setBackground(Config.LIGHTER);
         }
     }
 
@@ -74,7 +75,7 @@ public class ListItem extends javax.swing.JPanel {
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        g2.setColor(new Color(224, 225, 221));
+        g2.setColor(Config.LIGHT_GRAY);
         g2.fillRoundRect(0, 0, 50, getHeight(), 10, 10);
 
         g2.drawImage(binImage, getWidth() - 35, 12, 20, 20, this);
@@ -88,6 +89,17 @@ public class ListItem extends javax.swing.JPanel {
 
     public void setDeleteAble(boolean deleteAble) {
         this.deleteAble = deleteAble;
+    }
+    
+    public void applyTheme() {
+        setBackground(Config.LIGHT_GRAY);
+        panel.setBackground(Config.LIGHT_GRAY);
+        for (Component c : panel.getComponents()) {
+            if (c instanceof JLabel label) {
+                label.setForeground(Config.DARKEST);
+            }
+        }
+        repaint();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -18,8 +18,6 @@ public class WindowControlPanel extends javax.swing.JPanel {
         }
 
         @SuppressWarnings("unchecked")
-        // <editor-fold defaultstate="collapsed" desc="Generated
-        // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
         private void initComponents() {
 
@@ -68,4 +66,5 @@ public class WindowControlPanel extends javax.swing.JPanel {
         private core.view.component.common.WindowControlButton close;
         private core.view.component.common.WindowControlButton mi;
         // End of variables declaration//GEN-END:variables
+
 }

@@ -67,6 +67,9 @@ public class NoteHeaderPanel extends javax.swing.JPanel {
                         .addGap(0, 52, Short.MAX_VALUE));
     }// </editor-fold>//GEN-END:initComponents
 
+    void applyTheme() {
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }

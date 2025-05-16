@@ -36,7 +36,7 @@ public class SearchTextField extends JTextField{
     public SearchTextField(int column) {
         super(column);
         setBorder(Config.TEXT_FIELD_BORDER);
-        setBackground(Config.DARKEST_BLUE);
+        setBackground(Config.DARKEST);
         setForeground(Config.LIGHT_GRAY);
         setCaretColor(Config.LIGHT_GRAY); 
         setSelectionColor(Config.LIGHT_GRAY);
@@ -120,7 +120,7 @@ public class SearchTextField extends JTextField{
         if (isFocusOwner()) {
             double width = getWidth() - 4;
             int height = getHeight();
-            g2.setColor(Config.LIGHTER_BLUE);
+            g2.setColor(Config.LIGHTER);
             double size;
             if (show) {
                 size = width * (1 - location);
@@ -149,7 +149,7 @@ public class SearchTextField extends JTextField{
         int width = getWidth();
         int height = getHeight();
         if (mouseOver) {
-            g2.setColor(Config.LIGHTER_BLUE);
+            g2.setColor(Config.LIGHTER);
         } else {
             g2.setColor(Config.WHITE);
         }
@@ -158,5 +158,12 @@ public class SearchTextField extends JTextField{
         createLineStyle(g2);
         g2.dispose();
     }
-    
+
+    public void applyTheme() {
+        setBackground(Config.DARKEST);
+        setForeground(Config.LIGHT_GRAY);
+        setCaretColor(Config.LIGHT_GRAY); 
+        setSelectionColor(Config.LIGHT_GRAY);
+        repaint();
+    }
 }

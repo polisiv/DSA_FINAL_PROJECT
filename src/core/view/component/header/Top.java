@@ -118,4 +118,9 @@ public class Top extends JPanel {
     private javax.swing.JPanel headerContainer;
     private core.view.component.common.WindowControlPanel windowControlPanel;
     // End of variables declaration//GEN-END:variables
+
+    public void applyTheme() {
+        searchHeader.applyTheme();
+        noteHeader.applyTheme();
+    }
 }

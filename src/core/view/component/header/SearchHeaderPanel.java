@@ -3,6 +3,7 @@ package core.view.component.header;
 import core.view.component.common.SearchTextField;
 import core.view.component.common.HeaderButton;
 import core.view.component.common.HeaderEvent;
+import core.view.component.common.ThemePopupMenu;
 import core.view.uiconfig.Config;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -15,6 +16,18 @@ public class SearchHeaderPanel extends javax.swing.JPanel {
 
     private List<HeaderEvent> events;
     public SearchTextField textField = new SearchTextField(Config.SEARCH_TEXT_FIELD_LENGTH);
+    
+    private Runnable onBlueThemeSelected;
+    private Runnable onGreenThemeSelected;
+
+    public void setOnBlueThemeSelected(Runnable callback) {
+        this.onBlueThemeSelected = callback;
+    }
+
+    public void setOnGreenThemeSelected(Runnable callback) {
+        this.onGreenThemeSelected = callback;
+    }
+
 
     public SearchHeaderPanel() {
         initComponents();
@@ -26,13 +39,28 @@ public class SearchHeaderPanel extends javax.swing.JPanel {
         textField.setVisible(true);
         add(textField, "w 130!, h 25!, gapleft 0");
         addItem(Config.FILTER_ICON, Config.FILTER_EVENT_INDEX);
-        addItem(Config.SETTING_ICON, Config.SETTING_EVENT_INDEX);
+        
+        HeaderButton settingsButton = addItem(Config.SETTING_ICON, Config.SETTING_EVENT_INDEX);
+
+        ThemePopupMenu themePopup = new ThemePopupMenu(() -> {
+            if (onBlueThemeSelected != null) onBlueThemeSelected.run();
+        }, () -> {
+            if (onGreenThemeSelected != null) onGreenThemeSelected.run();
+        });
+
+        settingsButton.addActionListener(e -> {
+            themePopup.show(settingsButton, 0, settingsButton.getHeight());
+        });
+
+
         addSpace(Config.HEADER_BLANK_SPACE);
+        
+        
         repaint();
         revalidate();
     }
 
-    private void addItem(String icon, int index) {
+    private HeaderButton addItem(String icon, int index) {
         HeaderButton item = new HeaderButton();
         item.setImage(new ImageIcon(getClass().getResource("/core/view/icon/" + icon + ".png")).getImage(),
                 Config.WHITE);
@@ -40,6 +68,7 @@ public class SearchHeaderPanel extends javax.swing.JPanel {
             runEvent(index);
         });
         add(item, "w 50!, h 50!, center");
+        return item;
     }
 
     private void addSpace(int size) {
@@ -72,6 +101,10 @@ public class SearchHeaderPanel extends javax.swing.JPanel {
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGap(0, 52, Short.MAX_VALUE));
     }// </editor-fold>//GEN-END:initComponents
+
+    void applyTheme() {
+        textField.applyTheme();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

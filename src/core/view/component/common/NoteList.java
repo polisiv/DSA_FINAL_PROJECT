@@ -96,7 +96,7 @@ public class NoteList extends JList<NoteModel> {
                                                           boolean selected, boolean focus) {
                 NoteModel note = (NoteModel) value;
                 ListItem item = new ListItem(NoteList.this.getFont(), note.getTitle());
-
+                
                 if (index == movingIndex) {
                     item.setItemColor(selectedColor);
 
@@ -122,7 +122,7 @@ public class NoteList extends JList<NoteModel> {
         if (model.isEmpty()) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(Config.DARKEST_BLUE);
+            g2.setColor(Config.DARKEST);
 
             String message = Config.EMPTY_LIST_MESSAGE;
             Font font = getFont();
@@ -166,4 +166,16 @@ public class NoteList extends JList<NoteModel> {
     public void setSelectedColor(Color selectedColor) {
         this.selectedColor = selectedColor;
     }
+
+    public void applyTheme() {
+        repaint();
+        for (int i = 0; i < getModel().getSize(); i++) {
+            ListCellRenderer<? super NoteModel> renderer = getCellRenderer();
+            Component comp = renderer.getListCellRendererComponent(this, getModel().getElementAt(i), i, false, false);
+            if (comp instanceof ListItem item) {
+                item.applyTheme();
+            }
+        }
+    }
+
 }

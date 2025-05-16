@@ -2,6 +2,7 @@ package core.view.component.body;
 
 import core.model.NoteModel;
 import core.view.component.common.TitleTextField;
+import core.view.uiconfig.Config;
 
 public class NoteBodyPanel extends javax.swing.JPanel {
         private NoteModel currentNote;
@@ -12,13 +13,13 @@ public class NoteBodyPanel extends javax.swing.JPanel {
                 jScrollPane1 = new javax.swing.JScrollPane();
                 content = new javax.swing.JTextArea();
 
-                title.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-                title.setForeground(new java.awt.Color(13, 27, 42));
+                title.setFont(Config.TITLE_TEXTFIELD_FONT);
+                title.setForeground(Config.DARKEST);
 
-                date.setForeground(new java.awt.Color(65, 90, 119));
+                date.setForeground(Config.MIDDLE);
 
                 content.setColumns(20);
-                content.setForeground(new java.awt.Color(13, 27, 42));
+                content.setForeground(Config.DARKEST);
                 content.setRows(5);
                 jScrollPane1.setViewportView(content);
                 
@@ -34,8 +35,8 @@ public class NoteBodyPanel extends javax.swing.JPanel {
 
         public void setNote(NoteModel note) {
                 this.currentNote = note;
-                title.setText(note.getTitle()); // e.g., JTextField
-                content.setText(note.getContent()); // e.g., JTextArea
+                title.setText(note.getTitle()); 
+                content.setText(note.getContent());
                 date.setText(note.getDate());
         }
         
@@ -94,4 +95,13 @@ public class NoteBodyPanel extends javax.swing.JPanel {
         private javax.swing.JScrollPane jScrollPane1;
         private TitleTextField title;
         // End of variables declaration//GEN-END:variables
+
+    void applyTheme() {
+        date.setForeground(Config.MIDDLE);
+        content.setForeground(Config.DARKEST);
+        content.setBackground(Config.LIGHT_GRAY); // <-- important
+        title.applyTheme();
+        repaint();
+    }
+
 }

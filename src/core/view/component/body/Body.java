@@ -20,7 +20,7 @@ public class Body extends JPanel {
         scrollPane.setViewportView(search);
     }
     public void showNotePanel(NoteModel model) {
-        note = new NoteBodyPanel(model); // ⚠ replaces old one
+        note = new NoteBodyPanel(model); 
         scrollPane.setViewportView(note);
     }
     
@@ -48,4 +48,9 @@ public class Body extends JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
+
+    public void applyTheme() {
+        search.applyTheme();
+        note.applyTheme();
+    }
 }

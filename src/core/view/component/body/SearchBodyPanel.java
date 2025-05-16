@@ -8,7 +8,6 @@ public class SearchBodyPanel extends javax.swing.JPanel {
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -34,4 +33,8 @@ public class SearchBodyPanel extends javax.swing.JPanel {
     public core.view.component.common.NoteList noteList;
 
     // End of variables declaration//GEN-END:variables
+
+    void applyTheme() {
+        noteList.applyTheme();
+    }
 }
