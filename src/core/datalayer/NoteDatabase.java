@@ -23,34 +23,36 @@ public class NoteDatabase {
     public NoteDatabase(){
 
     }
-    public void addNote(String id, String title, String content, boolean isDeleted){
-        String note = """
-                        ID: %s
-                        Delete: %s
-                        =============START=============
-                        Title: %s
-                        Content: %s
-                        ==============END==============
-                        """.formatted(id, isDeleted ? "true" : "false",title != null && !title.isEmpty() ? title : "N/A" ,content);
-        if(Files.isWritable(file)){
-            try {
-                Files.writeString(file, note, StandardOpenOption.APPEND
-                );
-                System.out.println("""
-                   *******************
-                   MODIFY SUCCESSFULLY
-                   *******************
-                   """);
-                quantity++;
-            } catch (IOException e) {
-                System.out.println("""
-                   *********************
-                   MODIFY UNSUCCESSFULLY
-                   *********************
-                   """);
-            }
+    public void addNote(String id, String title, String content) {
+    String note = """
+                    ID: %s
+                    =============START=============
+                    Title: %s
+                    Content: %s
+                    =============END===============
+                    """.formatted(id, 
+                                  title != null && !title.isEmpty() ? title : "N/A", 
+                                  content != null ? content : "");
+
+    if (Files.isWritable(file)) {
+        try {
+            Files.writeString(file, note, StandardOpenOption.APPEND);
+            System.out.println("""
+               *******************
+               ADD SUCCESSFULLY
+               *******************
+               """);
+            quantity++;
+        } catch (IOException e) {
+            System.out.println("""
+               *********************
+               ADD UNSUCCESSFULLY
+               *********************
+               """);
         }
     }
+}
+
 
 //    public static void main(String[] args) {
 //        NoteDatabase dp = new NoteDatabase();
@@ -63,41 +65,65 @@ public class NoteDatabase {
 
 
     public void deleteNote(String id) {
-        try {
-            List<String> lines = Files.readAllLines(file);
-            List<String> updatedLines = new ArrayList<>();
-            boolean isTargetNote = false;
-    
-            for (String line : lines) {
-                if (line.startsWith("ID: ")) {
-                    if (line.equals("ID: " + id)) {
-                        isTargetNote = true;
-                    } else {
-                        updatedLines.add(line);
-                    }
-                } else if (!isTargetNote) {
-                    updatedLines.add(line); 
-                } else if (line.contains("END")) {
+    try {
+        List<String> lines = Files.readAllLines(file);
+        List<String> updatedLines = new ArrayList<>();
+        boolean isTargetNote = false;
+        boolean noteFound = false; // add notFound flag
+
+        for (String line : lines) {
+            if (line.startsWith("ID: ")) {
+                String lineId = line.substring(4).trim();
+                if (lineId.equals(id)) {
+                    isTargetNote = true;
+                    noteFound = true; 
+                    continue;
+                } else {
                     isTargetNote = false;
+                    updatedLines.add(line);
                 }
+            } else if (isTargetNote && line.contains("END")) {
+                isTargetNote = false;
+                continue;
+            } else if (!isTargetNote) {
+                updatedLines.add(line);
             }
-    
+        }
+
+        if (!noteFound) {
+            System.out.println("""
+                    ******************
+                    NOTE NOT FOUND
+                    ******************
+                    """);
+            return;
+        }
+
+        if (Files.isWritable(file)) {
             Files.write(file, updatedLines);
-    
+            quantity--;
+            noteQuerry.remove("ID: " + id);
             System.out.println("""
                     ******************
                     DELETE SUCCESSFULLY
                     ******************
                     """);
-    
-        } catch (IOException e) {
+        } else {
             System.out.println("""
                     ********************
-                    DELETE UNSUCCESSFULLY
+                    FILE NOT WRITABLE
                     ********************
                     """);
         }
+    } catch (IOException e) {
+        System.err.println("error: " + e.getMessage());
+        System.out.println("""
+                ********************
+                DELETE UNSUCCESSFULLY
+                ********************
+                """);
     }
+}
 
     //clean up the db by creating new db to store remaining notes
     public void cleanUp(){
@@ -149,7 +175,6 @@ public class NoteDatabase {
     try {
         List<String> lines = Files.readAllLines(file);
         String currentId = null;
-        boolean isDeleted = false;
         String title = null;
         StringBuilder contentBuilder = null;
         boolean readingContent = false;
@@ -157,26 +182,22 @@ public class NoteDatabase {
         for (String line : lines) {
             if (line.startsWith("ID: ")) {
                 currentId = line.substring(4).trim();
-                isDeleted = false;
                 title = null;
                 contentBuilder = new StringBuilder();
                 readingContent = false;
-            } else if (line.startsWith("Delete: ")) {
-                isDeleted = line.equals("Delete: true");
             } else if (line.startsWith("Title: ")) {
                 title = line.substring(7).trim();
             } else if (line.startsWith("Content: ")) {
                 readingContent = true;
                 contentBuilder.append(line.substring(9).trim()).append("\n");
-            } else if (line.startsWith("==============END==============")) {
+            } else if (line.startsWith("=============END===============")) {
                 readingContent = false;
-                if (!isDeleted && currentId != null && title != null && contentBuilder != null) {
+                if (currentId != null && title != null && contentBuilder != null) {
                     String content = contentBuilder.toString().strip();
                     notes.put(currentId, new NoteModel(title, content));
                 }
                 // reset
                 currentId = null;
-                isDeleted = false;
                 title = null;
                 contentBuilder = null;
             } else if (readingContent && contentBuilder != null) {
@@ -194,5 +215,6 @@ public class NoteDatabase {
 
     return notes;
 }
+
 
 }
