@@ -16,110 +16,106 @@ import java.util.Map;
 
 public class NoteDatabase {
     private final String PATH = "src/resource/database/Note.txt";
-    static int quantity = 0;
     private final Path file = Path.of(PATH);
     private static HashMap<String, List<String>> noteQuerry = new HashMap<>();
 
-    public NoteDatabase(){
+    public NoteDatabase() {
 
     }
+
     public void saveNote(String id, String title, String content) {
-    String note = """
-                    ID: %s
-                    =============START=============
-                    Title: %s
-                    Content: %s
-                    =============END===============
-                    """.formatted(id, 
-                                  title, 
-                                  content);
-
-    if (Files.isWritable(file)) {
-        try {
-            Files.writeString(file, note, StandardOpenOption.APPEND);
-            System.out.println("""
-               *******************
-               ADD SUCCESSFULLY
-               *******************
-               """);
-            quantity++;
-        } catch (IOException e) {
-            System.out.println("""
-               *********************
-               ADD UNSUCCESSFULLY
-               *********************
-               """);
-        }
-    }
-}
-
-    public void deleteNote(String id) {
-    try {
-        List<String> lines = Files.readAllLines(file);
-        List<String> updatedLines = new ArrayList<>();
-        boolean isTargetNote = false;
-        boolean noteFound = false; // add notFound flag
-
-        for (String line : lines) {
-            if (line.startsWith("ID: ")) {
-                String lineId = line.substring(4).trim();
-                if (lineId.equals(id)) {
-                    isTargetNote = true;
-                    noteFound = true; 
-                    continue;
-                } else {
-                    isTargetNote = false;
-                    updatedLines.add(line);
-                }
-            } else if (isTargetNote && line.contains("END")) {
-                isTargetNote = false;
-                continue;
-            } else if (!isTargetNote) {
-                updatedLines.add(line);
-            }
-        }
-
-        if (!noteFound) {
-            System.out.println("""
-                    ******************
-                    NOTE NOT FOUND
-                    ******************
-                    """);
-            return;
-        }
+        String note = """
+                ID: %s
+                =============START=============
+                Title: %s
+                Content: %s
+                =============END===============
+                """.formatted(id,
+                title,
+                content);
 
         if (Files.isWritable(file)) {
-            Files.write(file, updatedLines);
-            quantity--;
-            noteQuerry.remove("ID: " + id);
-            System.out.println("""
-                    ******************
-                    DELETE SUCCESSFULLY
-                    ******************
-                    """);
-        } else {
+            try {
+                Files.writeString(file, note, StandardOpenOption.APPEND);
+                System.out.println("""
+                        *******************
+                        ADD SUCCESSFULLY
+                        *******************
+                        """);
+            } catch (IOException e) {
+                System.out.println("""
+                        *********************
+                        ADD UNSUCCESSFULLY
+                        *********************
+                        """);
+            }
+        }
+    }
+
+    public void deleteNote(String id) {
+        try {
+            List<String> lines = Files.readAllLines(file);
+            List<String> updatedLines = new ArrayList<>();
+            boolean isTargetNote = false;
+            boolean noteFound = false;
+
+            for (String line : lines) {
+                if (line.startsWith("ID: ")) {
+                    String lineId = line.substring(4).trim();
+                    if (lineId.equals(id)) {
+                        isTargetNote = true;
+                        noteFound = true;
+                        continue;
+                    } else {
+                        isTargetNote = false;
+                        updatedLines.add(line);
+                    }
+                } else if (isTargetNote) {
+                    if (line.trim().equals("END")) {
+                        isTargetNote = false;
+                    }
+                    continue;
+                } else {
+                    updatedLines.add(line);
+                }
+            }
+
+            if (!noteFound) {
+                System.out.println("""
+                        ******************
+                        NOTE NOT FOUND
+                        ******************
+                        """);
+                return;
+            }
+
+            if (Files.isWritable(file)) {
+                Files.write(file, updatedLines);
+                quantity--;
+                noteQuerry.remove("ID: " + id);
+                System.out.println("""
+                        ******************
+                        DELETE SUCCESSFULLY
+                        ******************
+                        """);
+            } else {
+                System.out.println("""
+                        ********************
+                        FILE NOT WRITABLE
+                        ********************
+                        """);
+            }
+        } catch (IOException e) {
+            System.err.println("error: " + e.getMessage());
             System.out.println("""
                     ********************
-                    FILE NOT WRITABLE
+                    DELETE UNSUCCESSFULLY
                     ********************
                     """);
         }
-    } catch (IOException e) {
-        System.err.println("error: " + e.getMessage());
-        System.out.println("""
-                ********************
-                DELETE UNSUCCESSFULLY
-                ********************
-                """);
-    }
-}
-
-    //clean up the db by creating new db to store remaining notes
-    public void cleanUp(){
-
     }
 
-    public HashMap<String,List<String>> loadNote(){
+    public HashMap<String, List<String>> loadNote() {
         try {
             List<String> lines = Files.readAllLines(file);
             List<String> temp = new ArrayList<>();
@@ -149,61 +145,59 @@ public class NoteDatabase {
             return noteQuerry;
         } catch (IOException e) {
             System.out.println("""
-                ****************
-                NO CONTENT FOUND
-                ****************
-                """
+                    ****************
+                    NO CONTENT FOUND
+                    ****************
+                    """
             );
             return new HashMap<>();
         }
     }
 
     public Map<String, NoteModel> getAllNotes() {
-    Map<String, NoteModel> notes = new LinkedHashMap<>();
+        Map<String, NoteModel> notes = new LinkedHashMap<>();
 
-    try {
-        List<String> lines = Files.readAllLines(file);
-        String currentId = null;
-        String title = null;
-        StringBuilder contentBuilder = null;
-        boolean readingContent = false;
+        try {
+            List<String> lines = Files.readAllLines(file);
+            String currentId = null;
+            String title = null;
+            StringBuilder contentBuilder = null;
+            boolean readingContent = false;
 
-        for (String line : lines) {
-            if (line.startsWith("ID: ")) {
-                currentId = line.substring(4).trim();
-                title = null;
-                contentBuilder = new StringBuilder();
-                readingContent = false;
-            } else if (line.startsWith("Title: ")) {
-                title = line.substring(7).trim();
-            } else if (line.startsWith("Content: ")) {
-                readingContent = true;
-                contentBuilder.append(line.substring(9).trim()).append("\n");
-            } else if (line.startsWith("=============END===============")) {
-                readingContent = false;
-                if (currentId != null && title != null && contentBuilder != null) {
-                    String content = contentBuilder.toString().strip();
-                    notes.put(currentId, new NoteModel(title, content));
+            for (String line : lines) {
+                if (line.startsWith("ID: ")) {
+                    currentId = line.substring(4).trim();
+                    title = null;
+                    contentBuilder = new StringBuilder();
+                    readingContent = false;
+                } else if (line.startsWith("Title: ")) {
+                    title = line.substring(7).trim();
+                } else if (line.startsWith("Content: ")) {
+                    readingContent = true;
+                    contentBuilder.append(line.substring(9).trim()).append("\n");
+                } else if (line.startsWith("=============END===============")) {
+                    readingContent = false;
+                    if (currentId != null && title != null && contentBuilder != null) {
+                        String content = contentBuilder.toString().strip();
+                        notes.put(currentId, new NoteModel(title, content));
+                    }
+                    // reset
+                    currentId = null;
+                    title = null;
+                    contentBuilder = null;
+                } else if (readingContent && contentBuilder != null) {
+                    contentBuilder.append(line).append("\n");
                 }
-                // reset
-                currentId = null;
-                title = null;
-                contentBuilder = null;
-            } else if (readingContent && contentBuilder != null) {
-                contentBuilder.append(line).append("\n");
             }
+
+        } catch (IOException e) {
+            System.out.println("""
+                    *****************
+                    NO CONTENT FOUND
+                    *****************
+                    """);
         }
 
-    } catch (IOException e) {
-        System.out.println("""
-                *****************
-                NO CONTENT FOUND
-                *****************
-                """);
+        return notes;
     }
-
-    return notes;
-}
-
-
 }

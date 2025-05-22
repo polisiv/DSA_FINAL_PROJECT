@@ -66,7 +66,4 @@ public class NoteService {
                 ? new ArrayList<>(getAllNotes().values())
                 : searchIndex.searchNotes(query);
     }
-
-
-
 }
