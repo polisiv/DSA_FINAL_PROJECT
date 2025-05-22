@@ -1,7 +1,6 @@
 package core.controller;
 
 import core.model.NoteModel;
-//import core.view.NoteView;
 import core.modelservice.NoteService;
 import core.view.frame.MainFrame;
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ public class NoteController {
     public void init() {
         notesMap = noteService.getAllNotes();
         displayedNotes = new ArrayList<>(notesMap.values());
-
         mainFrame.initWithNotes(displayedNotes);
 
         bindUIEvents();
@@ -51,13 +49,8 @@ public class NoteController {
                 mainFrame.setNotes(displayedNotes);
                 return;
             }
-
-            List<NoteModel> filtered = displayedNotes.stream()
-                .filter(note -> note.getTitle().toLowerCase().contains(query.toLowerCase())
-                             || note.getContent().toLowerCase().contains(query.toLowerCase()))
-                .toList();
-
-            mainFrame.setNotes(filtered);
+            displayedNotes = noteService.searchNotes(query);
+            mainFrame.setNotes(displayedNotes);
         });
        
         mainFrame.setOnDeleteNote(note -> {
