@@ -58,24 +58,26 @@ public class NoteDatabase {
         List<String> lines = Files.readAllLines(file);
         List<String> updatedLines = new ArrayList<>();
         boolean isTargetNote = false;
-        boolean noteFound = false; // add notFound flag
+        boolean noteFound = false;
 
         for (String line : lines) {
             if (line.startsWith("ID: ")) {
                 String lineId = line.substring(4).trim();
                 if (lineId.equals(id)) {
                     isTargetNote = true;
-                    noteFound = true; 
+                    noteFound = true;
                     continue;
                 } else {
                     isTargetNote = false;
                     updatedLines.add(line);
                 }
-            } else if (isTargetNote && line.contains("END")) {
-                isTargetNote = false;
-                continue;
-            } else if (!isTargetNote) {
-                updatedLines.add(line);
+            } else if (isTargetNote) {
+                if (line.trim().equals("END")) {
+                    isTargetNote = false; 
+                }
+                continue; 
+            } else {
+                updatedLines.add(line); 
             }
         }
 
@@ -91,7 +93,7 @@ public class NoteDatabase {
         if (Files.isWritable(file)) {
             Files.write(file, updatedLines);
             quantity--;
-            noteQuerry.remove("ID: " + id);
+            noteQuerry.remove("ID: " + id); 
             System.out.println("""
                     ******************
                     DELETE SUCCESSFULLY
@@ -113,11 +115,6 @@ public class NoteDatabase {
                 """);
     }
 }
-
-    //clean up the db by creating new db to store remaining notes
-    public void cleanUp(){
-
-    }
 
     public HashMap<String,List<String>> loadNote(){
         try {
