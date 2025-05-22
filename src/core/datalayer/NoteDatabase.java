@@ -91,7 +91,6 @@ public class NoteDatabase {
 
             if (Files.isWritable(file)) {
                 Files.write(file, updatedLines);
-                quantity--;
                 noteQuerry.remove("ID: " + id);
                 System.out.println("""
                         ******************

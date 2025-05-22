@@ -41,10 +41,6 @@ public class NoteService {
     }
 
 
-    public List<NoteModel> searchNote(){
-        return null;
-    }
-
     public void indexNote(NoteModel note) {
         // Index title words
         for (String word : note.getTitle().split("\\s+")) {
