@@ -2,12 +2,12 @@ package core.view.frame;
 
 import core.model.NoteModel;
 import core.modelservice.NoteFilterType;
+import core.modelservice.Sorter;
 import core.view.component.common.FilterPopupMenu;
 import core.view.component.common.HeaderEvent;
 import core.view.uiconfig.Config;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.event.DocumentEvent;
@@ -91,10 +91,10 @@ public class MainFrame extends javax.swing.JFrame {
         
         setOnFilterSelected(filterType -> {
             switch (filterType) {
-                case ALPHABETICAL_ASCENDING -> displayedNotes.sort(Comparator.comparing(NoteModel::getTitle));
-                case ALPHABETICAL_DESCENDING -> displayedNotes.sort(Comparator.comparing(NoteModel::getTitle).reversed());
-                case NEWEST_FIRST -> displayedNotes.sort(Comparator.comparing(NoteModel::getDate).reversed());
-                case OLDEST_FIRST -> displayedNotes.sort(Comparator.comparing(NoteModel::getDate));
+                case ALPHABETICAL_ASCENDING -> displayedNotes = Sorter.sort(displayedNotes, "Alphabetically Ascending");
+                case ALPHABETICAL_DESCENDING -> displayedNotes = Sorter.sort(displayedNotes, "Alphabetically Descending");
+                case NEWEST_FIRST -> displayedNotes = Sorter.sort(displayedNotes, "Date Newest");
+                case OLDEST_FIRST -> displayedNotes = Sorter.sort(displayedNotes, "Date Oldest");
             }
             setNotes(displayedNotes); // Refresh view
         });
