@@ -25,11 +25,10 @@ public class NoteService {
     public void saveNote(NoteModel newNote){ 
         // avoids having multiple notes if saved multiple times
         db.deleteNote(newNote.getNoteId()); 
-        db.addNote(newNote.getNoteId(), newNote.getTitle(), newNote.getContent()); 
+        db.saveNote(newNote.getNoteId(), newNote.getTitle(), newNote.getContent()); 
     }
 
     public void deleteNote(NoteModel model){
-        model.setDeleted(true);
         db.deleteNote(model.getNoteId());
     }
 

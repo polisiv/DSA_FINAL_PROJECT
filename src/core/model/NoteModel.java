@@ -8,8 +8,6 @@ public class NoteModel {
     private String title;
     private String date;    // Date of creation
     private String noteId;
-    private boolean isSaved = false;
-    private boolean isDeleted = false;
 
     public NoteModel(String title, String content) {
         this.title = title;
@@ -17,7 +15,6 @@ public class NoteModel {
         date = LocalDateTime.now().format(formatter);
         //using instant time (year-month-day)
         noteId = LocalDateTime.now().toString(); //the note id in this format "2024-01-04T11:59:03.286975"
-        isSaved = false;
     }
 
     public NoteModel(){
@@ -48,19 +45,4 @@ public class NoteModel {
         return noteId;
     }
 
-    public boolean isSaved() {
-        return isSaved;
-    }
-
-    public void setSaved(boolean saved) {
-        isSaved = saved;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
 }

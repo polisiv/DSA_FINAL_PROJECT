@@ -23,7 +23,7 @@ public class NoteDatabase {
     public NoteDatabase(){
 
     }
-    public void addNote(String id, String title, String content) {
+    public void saveNote(String id, String title, String content) {
     String note = """
                     ID: %s
                     =============START=============
@@ -31,8 +31,8 @@ public class NoteDatabase {
                     Content: %s
                     =============END===============
                     """.formatted(id, 
-                                  title != null && !title.isEmpty() ? title : "N/A", 
-                                  content != null ? content : "");
+                                  title, 
+                                  content);
 
     if (Files.isWritable(file)) {
         try {
@@ -52,17 +52,6 @@ public class NoteDatabase {
         }
     }
 }
-
-
-//    public static void main(String[] args) {
-//        NoteDatabase dp = new NoteDatabase();
-////        dp.addNote("70v3.2","", """
-////               2""",false);
-//        dp.readNote();
-////        HashMap<String,List<String>> test = dp.loadNote();
-////        test.forEach((s,v) -> System.out.println("KEY: " + s + " VALUE: " + v));
-//    }
-
 
     public void deleteNote(String id) {
     try {

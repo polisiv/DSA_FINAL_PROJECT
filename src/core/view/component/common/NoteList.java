@@ -56,8 +56,7 @@ public class NoteList extends JList<NoteModel> {
                 if (movingIndex >= 0 && movingIndex < model.size()) {
                     NoteModel note = model.getElementAt(movingIndex);
 
-                    if (mx <= Config.NOTE_LIST_DELETABLE) {
-                        note.setDeleted(true);    
+                    if (mx <= Config.NOTE_LIST_DELETABLE) {    
                         model.removeElementAt(movingIndex);
                         if (onDeleteNote != null) {
                             onDeleteNote.accept(note);
