@@ -15,7 +15,6 @@ class Trie {
             children = new TrieNode[94];
             isEnd = false;
             notes = null;
-
         }
 
         public TrieNode[] getChildren() {
@@ -40,8 +39,6 @@ class Trie {
             }
             notes.add(note);
         }
-
-
     }
 
     private final TrieNode root;

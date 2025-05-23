@@ -2,6 +2,7 @@ package core.modelservice;
 
 import core.model.NoteModel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Sorter {
@@ -12,15 +13,15 @@ public class Sorter {
             case "Alphabetically Ascending":
                 result = alphabeticalSort(displayedNotes);
                 break;
-            case "Alphabetically Descending":
-                result = alphabeticalSort(displayedNotes).reversed();
-                break;
+//            case "Alphabetically Descending":
+//                result = alphabeticalSort(displayedNotes).reverse();
+//                break;
             case "Date Newest":
                 result = dateSort(displayedNotes);
                 break;
-            case "Date Oldest":
-                result = dateSort(displayedNotes).reversed();
-                break;
+//            case "Date Oldest":
+//                result = dateSort(displayedNotes).reverse();
+//                break;
             default:
                 result = displayedNotes;
         }
