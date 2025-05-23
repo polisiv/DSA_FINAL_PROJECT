@@ -83,8 +83,11 @@ private static void merge(List<NoteModel> list, int left, int mid, int right) {
 
 
     private static List<NoteModel> dateSort(List<NoteModel> displayedNotes){
-        List<NoteModel> result = new ArrayList<>();
+        List<NoteModel> result = new ArrayList<>(displayedNotes);
+        result.sort((n1, n2) -> n2.getCreatedDateTime().compareTo(n1.getCreatedDateTime())); // newest to oldest
         return result;
     }
+    
+
 
 }

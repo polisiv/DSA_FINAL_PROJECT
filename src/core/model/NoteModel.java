@@ -44,5 +44,8 @@ public class NoteModel {
     public String getNoteId(){
         return noteId;
     }
+    public LocalDateTime getCreatedDateTime() {
+        return LocalDateTime.parse(noteId);
+    }
 
 }
