@@ -2,6 +2,7 @@ package core.controller;
 
 import core.model.NoteModel;
 import core.modelservice.NoteService;
+import core.modelservice.Sorter;
 import core.view.frame.MainFrame;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +45,8 @@ public class NoteController {
         });
 
         mainFrame.setOnSearch(query -> {
-            // search logic
             if (query == null || query.isBlank()) {
+                displayedNotes = new ArrayList<>(notesMap.values());
                 mainFrame.setNotes(displayedNotes);
                 return;
             }
@@ -63,6 +64,16 @@ public class NoteController {
         mainFrame.setOnNoteSelected(index -> {
             NoteModel selectedNote = displayedNotes.get(index);
             mainFrame.showNoteDetail(selectedNote);
+        });
+
+        mainFrame.setOnFilterSelected(filterType -> {
+            switch (filterType) {
+                case ALPHABETICAL_ASCENDING -> displayedNotes = Sorter.sort(displayedNotes, "Alphabetically Ascending");
+                case ALPHABETICAL_DESCENDING -> displayedNotes = Sorter.sort(displayedNotes, "Alphabetically Descending");
+                case NEWEST_FIRST -> displayedNotes = Sorter.sort(displayedNotes, "Date Newest");
+                case OLDEST_FIRST -> displayedNotes = Sorter.sort(displayedNotes, "Date Oldest");
+            }
+            mainFrame.setNotes(displayedNotes); // Refresh view
         });
     }
 }
