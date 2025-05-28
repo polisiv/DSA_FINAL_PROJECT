@@ -14,16 +14,17 @@ public class NoteService {
     public NoteService(NoteDatabase db){
         this.db = db;
         this.searchIndex = new Trie();
+        indexNotes();
     }
     public Map<String, NoteModel> getAllNotes(){
-        Map<String, NoteModel> notes = db.getAllNotes();
-        // Index all existing notes
-        for (NoteModel note : notes.values()) {
-            indexNote(note);
-        }
-        return notes;
+        return db.getAllNotes();
     }
 
+    public void indexNotes(){
+        for(NoteModel note : getAllNotes().values()){
+            indexNote(note);
+        }
+    }
 
     public void loadNote(){
         HashMap<String,List<String>> query = db.loadNote();

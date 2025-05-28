@@ -73,6 +73,11 @@ class Trie {
                 searchByPrefix(root, term, 0, results);
             }
         }
+
+        for(NoteModel note : results) {
+            System.out.println(note.getTitle());
+        }
+        System.out.println("Check");
         return new ArrayList<>(results);
     }
 

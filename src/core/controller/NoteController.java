@@ -32,14 +32,17 @@ public class NoteController {
         mainFrame.setOnSave(() -> {
             NoteModel note = mainFrame.getCurrentNote();
             noteService.saveNote(note);
+            updateNoteLists();
+            mainFrame.setNotes(displayedNotes);
         });
 
 
         mainFrame.setOnNewNote(() -> {
             NoteModel newNote = new NoteModel("N/A", "Untitled Note");
-            notesMap.put(newNote.getTitle(), newNote);
-            displayedNotes.add(0, newNote);
+//            notesMap.put(newNote.getTitle(), newNote);
+//            displayedNotes.add(0, newNote);
             noteService.saveNote(newNote);
+            updateNoteLists();
             mainFrame.setNotes(displayedNotes);
             mainFrame.showNoteDetail(newNote);
         });
@@ -47,6 +50,7 @@ public class NoteController {
         mainFrame.setOnSearch(query -> {
             if (query == null || query.isBlank()) {
                 displayedNotes = new ArrayList<>(notesMap.values());
+                //updateNoteLists();
                 mainFrame.setNotes(displayedNotes);
                 return;
             }
@@ -55,9 +59,10 @@ public class NoteController {
         });
        
         mainFrame.setOnDeleteNote(note -> {
-            displayedNotes.remove(note);
-            notesMap.remove(note.getTitle());
+//            displayedNotes.remove(note);
+//            notesMap.remove(note.getTitle());
             noteService.deleteNote(note);
+            updateNoteLists();
             mainFrame.setNotes(displayedNotes);
         });
 
@@ -75,5 +80,11 @@ public class NoteController {
             }
             mainFrame.setNotes(displayedNotes); // Refresh view
         });
+
+    }
+
+    private void updateNoteLists() {
+        notesMap = noteService.getAllNotes();
+        displayedNotes = new ArrayList<>(notesMap.values());
     }
 }
