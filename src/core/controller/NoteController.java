@@ -1,7 +1,7 @@
 package core.controller;
 
-import core.model.AbbreviationModel;
 import core.model.NoteModel;
+import core.modelservice.AbbreviationModel;
 import core.modelservice.BKTree;
 import core.modelservice.DictionaryLoader;
 import core.modelservice.NoteService;

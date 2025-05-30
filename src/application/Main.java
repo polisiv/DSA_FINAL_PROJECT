@@ -2,7 +2,7 @@ package application;
 
 import core.controller.NoteController;
 import core.datalayer.NoteDatabase;
-import core.model.AbbreviationModel;
+import core.modelservice.AbbreviationModel;
 import core.modelservice.NoteService;
 import core.view.frame.MainFrame;
 import javax.swing.*;

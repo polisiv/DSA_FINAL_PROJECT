@@ -1,4 +1,4 @@
-package core.model;
+package core.modelservice;
 
 import java.io.IOException;
 import java.nio.file.Files;
