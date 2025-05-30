@@ -2,6 +2,7 @@ package core.view.frame;
 
 import core.model.NoteModel;
 import core.modelservice.NoteFilterType;
+import core.view.component.body.Body;
 import core.view.component.common.FilterPopupMenu;
 import core.view.component.common.HeaderEvent;
 import core.view.uiconfig.Config;
@@ -15,7 +16,6 @@ import javax.swing.event.DocumentListener;
 public class MainFrame extends javax.swing.JFrame {
     private Runnable onNewNote;
     private Runnable onSave;
-    private java.util.function.Consumer<Integer> onDeleteNote;
     private java.util.function.Consumer<String> onSearch;
     private java.util.function.Consumer<Integer> onNoteSelected;
     private java.util.function.Consumer<NoteFilterType> onFilterSelected;
@@ -231,7 +231,9 @@ public class MainFrame extends javax.swing.JFrame {
         repaint();
     }
 
-
+    public Body getBody() {
+        return body;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private core.view.component.body.Body body;

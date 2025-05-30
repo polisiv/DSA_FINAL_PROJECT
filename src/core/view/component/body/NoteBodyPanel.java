@@ -90,7 +90,7 @@ public class NoteBodyPanel extends javax.swing.JPanel {
         }// </editor-fold>//GEN-END:initComponents
 
         // Variables declaration - do not modify//GEN-BEGIN:variables
-        private javax.swing.JTextArea content;
+        public javax.swing.JTextArea content;
         private javax.swing.JLabel date;
         private javax.swing.JScrollPane jScrollPane1;
         private TitleTextField title;

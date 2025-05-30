@@ -1,8 +1,6 @@
 package core.modelservice;
 
-import core.datalayer.NoteDatabase;
 import core.model.NoteModel;
-
 import java.util.*;
 
 class Trie {
@@ -116,4 +114,3 @@ class Trie {
         }
     }
 }
-

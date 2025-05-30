@@ -1,12 +1,21 @@
 package core.controller;
 
+import core.model.AbbreviationModel;
 import core.model.NoteModel;
 import core.modelservice.NoteService;
 import core.modelservice.Sorter;
 import core.view.frame.MainFrame;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
+import javax.swing.undo.UndoManager;
 
 public class NoteController {
     private final MainFrame mainFrame;
@@ -15,17 +24,25 @@ public class NoteController {
     private Map<String, NoteModel> notesMap;
     private List<NoteModel> displayedNotes;
 
-    public NoteController(MainFrame mainFrame, NoteService noteService) {
+    private final AbbreviationModel abbreviationModel;
+    private final UndoManager undoManager;
+    private boolean isSmartAbbreviationEnabled;
+
+    public NoteController(MainFrame mainFrame, NoteService noteService, AbbreviationModel abbreviationModel, UndoManager undoManager) {
         this.mainFrame = mainFrame;
         this.noteService = noteService;
+        this.abbreviationModel = abbreviationModel;
+        this.undoManager = undoManager;
+        this.isSmartAbbreviationEnabled = true;
     }
 
     public void init() {
         notesMap = noteService.getAllNotes();
         displayedNotes = new ArrayList<>(notesMap.values());
         mainFrame.initWithNotes(displayedNotes);
-
         bindUIEvents();
+        addToggleKeybinding();
+        mainFrame.getBody().note.content.getDocument().addUndoableEditListener(undoManager);
     }
 
     private void bindUIEvents() {
@@ -39,12 +56,11 @@ public class NoteController {
 
         mainFrame.setOnNewNote(() -> {
             NoteModel newNote = new NoteModel("N/A", "Untitled Note");
-//            notesMap.put(newNote.getTitle(), newNote);
-//            displayedNotes.add(0, newNote);
             noteService.saveNote(newNote);
             updateNoteLists();
             mainFrame.setNotes(displayedNotes);
             mainFrame.showNoteDetail(newNote);
+            addAutoCompleteKeybinding();
         });
 
         mainFrame.setOnSearch(query -> {
@@ -59,8 +75,6 @@ public class NoteController {
         });
        
         mainFrame.setOnDeleteNote(note -> {
-//            displayedNotes.remove(note);
-//            notesMap.remove(note.getTitle());
             noteService.deleteNote(note);
             updateNoteLists();
             mainFrame.setNotes(displayedNotes);
@@ -69,6 +83,7 @@ public class NoteController {
         mainFrame.setOnNoteSelected(index -> {
             NoteModel selectedNote = displayedNotes.get(index);
             mainFrame.showNoteDetail(selectedNote);
+            addAutoCompleteKeybinding();
         });
 
         mainFrame.setOnFilterSelected(filterType -> {
@@ -86,5 +101,111 @@ public class NoteController {
     private void updateNoteLists() {
         notesMap = noteService.getAllNotes();
         displayedNotes = new ArrayList<>(notesMap.values());
+    }
+
+    private void addAutoCompleteKeybinding(){
+        addSpaceKeybinding();
+        addUndoKeybinding();
+    }
+
+    private void addToggleKeybinding() {
+        boolean isMac = System.getProperty("os.name").toLowerCase().contains("mac");
+
+        KeyStroke keyStroke = isMac
+        ? KeyStroke.getKeyStroke("meta shift H")  
+        : KeyStroke.getKeyStroke("control H"); 
+
+        InputMap inputMap = mainFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = mainFrame.getRootPane().getActionMap();
+
+        inputMap.put(keyStroke, "toggleSuggestions");
+        actionMap.put("toggleSuggestions", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isSmartAbbreviationEnabled = !isSmartAbbreviationEnabled;
+                System.out.println("Smart Suggestions: " + (isSmartAbbreviationEnabled ? "ON" : "OFF"));
+            }
+        });
+    }
+
+    private void addSpaceKeybinding() {
+        JTextArea textArea = mainFrame.getBody().note.content;
+        KeyStroke spaceKey = KeyStroke.getKeyStroke("SPACE");
+
+        InputMap inputMap = textArea.getInputMap(JComponent.WHEN_FOCUSED);
+        ActionMap actionMap = textArea.getActionMap();
+
+        inputMap.put(spaceKey, "customSpace");
+        actionMap.put("customSpace", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Space key pressed");
+                if (isSmartAbbreviationEnabled) {
+                    triggerAutocomplete();
+                } else {
+                    insertSpace();
+                }
+            }
+        });
+    }
+
+    private void triggerAutocomplete() {
+        try {
+            // System.out.println("Triggering autocomplete...");
+            JTextArea textArea = mainFrame.getBody().note.content;
+            int caretPos = textArea.getCaretPosition();
+
+            if (caretPos > 1) {
+                String textBefore = textArea.getText(0, caretPos);
+                int wordStart = textBefore.lastIndexOf(' ');
+                wordStart = (wordStart == -1) ? 0 : wordStart + 1;
+
+                String currentWord = textBefore.substring(wordStart).trim();
+                // System.out.println("Current word: " + currentWord);
+
+                if (abbreviationModel.isAbbreviation(currentWord)) {
+                    String expansion = abbreviationModel.getExpansion(currentWord);
+
+                    textArea.getDocument().remove(wordStart, caretPos - wordStart);
+                    textArea.getDocument().insertString(wordStart, expansion, null);
+
+                    // System.out.println("Expanded to: " + expansion);
+                    return;
+                }
+            }
+
+            // If no match → insert space
+            insertSpace();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void insertSpace() {
+        try {
+            JTextArea textArea = mainFrame.getBody().note.content;
+            textArea.getDocument().insertString(textArea.getCaretPosition(), " ", null);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void addUndoKeybinding() {
+        JTextArea textArea = mainFrame.getBody().note.content;
+        KeyStroke undoKey = KeyStroke.getKeyStroke("control Z");
+
+        InputMap inputMap = textArea.getInputMap(JComponent.WHEN_FOCUSED);
+        ActionMap actionMap = textArea.getActionMap();
+
+        inputMap.put(undoKey, "Undo");
+        actionMap.put("Undo", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (undoManager.canUndo()) {
+                    undoManager.undo();
+                }
+            }
+        });
     }
 }
