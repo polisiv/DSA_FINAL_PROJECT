@@ -105,6 +105,7 @@ public class NoteController {
 
     private void addAutoCompleteKeybinding(){
         addSpaceKeybinding();
+        addEnterKeybinding();
         addUndoKeybinding();
     }
 
@@ -148,35 +149,61 @@ public class NoteController {
             }
         });
     }
+    private void addEnterKeybinding() {
+        JTextArea textArea = mainFrame.getBody().note.content;
+        KeyStroke enterKey = KeyStroke.getKeyStroke("ENTER");
+
+        InputMap inputMap = textArea.getInputMap(JComponent.WHEN_FOCUSED);
+        ActionMap actionMap = textArea.getActionMap();
+
+        inputMap.put(enterKey, "customEnter");
+        actionMap.put("customEnter", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Enter key pressed");
+                if (isSmartAbbreviationEnabled) {
+                    triggerAutocomplete(); // expand if needed
+                }
+                insertNewline(); // always insert newline after
+            }
+        });
+    }
+
+private void insertNewline() {
+    try {
+        JTextArea textArea = mainFrame.getBody().note.content;
+        textArea.getDocument().insertString(textArea.getCaretPosition(), "\n", null);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+
 
     private void triggerAutocomplete() {
+        JTextArea textArea = mainFrame.getBody().note.content;
+        int caretPos = textArea.getCaretPosition();
+        int currentLine;
         try {
-            // System.out.println("Triggering autocomplete...");
-            JTextArea textArea = mainFrame.getBody().note.content;
-            int caretPos = textArea.getCaretPosition();
+            currentLine = textArea.getLineOfOffset(caretPos);
+            int lineStartOffset = textArea.getLineStartOffset(currentLine);
+            int lineEndOffset = caretPos;
 
-            if (caretPos > 1) {
-                String textBefore = textArea.getText(0, caretPos);
-                int wordStart = textBefore.lastIndexOf(' ');
-                wordStart = (wordStart == -1) ? 0 : wordStart + 1;
+            String lineTextBeforeCaret = textArea.getText(lineStartOffset, lineEndOffset - lineStartOffset);
 
-                String currentWord = textBefore.substring(wordStart).trim();
-                // System.out.println("Current word: " + currentWord);
+            int wordStartInLine = lineTextBeforeCaret.lastIndexOf(' ');
+            wordStartInLine = (wordStartInLine == -1) ? 0 : wordStartInLine + 1;
 
-                if (abbreviationModel.isAbbreviation(currentWord)) {
-                    String expansion = abbreviationModel.getExpansion(currentWord);
+            String currentWord = lineTextBeforeCaret.substring(wordStartInLine).trim();
 
-                    textArea.getDocument().remove(wordStart, caretPos - wordStart);
-                    textArea.getDocument().insertString(wordStart, expansion, null);
+            // System.out.println("Current word (safe): " + currentWord);
 
-                    // System.out.println("Expanded to: " + expansion);
-                    return;
-                }
+            if (abbreviationModel.isAbbreviation(currentWord)) {
+                String expansion = abbreviationModel.getExpansion(currentWord);
+
+                // Replace current word in current line only
+                textArea.getDocument().remove(lineStartOffset + wordStartInLine, lineEndOffset - (lineStartOffset + wordStartInLine));
+                textArea.getDocument().insertString(lineStartOffset + wordStartInLine, expansion, null);
             }
-
-            // If no match → insert space
-            insertSpace();
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }

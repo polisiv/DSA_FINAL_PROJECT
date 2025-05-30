@@ -4,7 +4,6 @@ import core.model.NoteModel;
 import core.modelservice.NoteFilterType;
 import core.view.component.body.Body;
 import core.view.component.common.FilterPopupMenu;
-import core.view.component.common.HeaderEvent;
 import core.view.uiconfig.Config;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -58,25 +57,22 @@ public class MainFrame extends javax.swing.JFrame {
         top.initWindowControlPanel(MainFrame.this, mainPanel);
         top.initDrag(MainFrame.this);
 
-        top.searchHeader.addEvent(new HeaderEvent() {
-            @Override
-            public void buttonSelected(int index) {
-                switch (index) {
-                    case 1 -> {
-                        if (onNewNote != null)
-                            onNewNote.run();
-                    }
-                    case 2 -> System.out.println("Search");
-                    case 3 -> {
-                        FilterPopupMenu popup = new FilterPopupMenu(filterType -> {
-                            if (onFilterSelected != null) {
-                                onFilterSelected.accept(filterType);
-                            }
-                        });
-                        popup.show(top.searchHeader.filterButton, 0, top.searchHeader.filterButton.getHeight());
-                    }
-                    case 4 -> {}
+        top.searchHeader.addEvent((int index) -> {
+            switch (index) {
+                case 1 -> {
+                    if (onNewNote != null)
+                        onNewNote.run();
                 }
+                case 2 -> System.out.println("Search");
+                case 3 -> {
+                    FilterPopupMenu popup = new FilterPopupMenu(filterType -> {
+                        if (onFilterSelected != null) {
+                            onFilterSelected.accept(filterType);
+                        }
+                    });
+                    popup.show(top.searchHeader.filterButton, 0, top.searchHeader.filterButton.getHeight());
+                }
+                case 4 -> {}
             }
         });
         top.searchHeader.setOnBlueThemeSelected(() -> {
@@ -90,14 +86,17 @@ public class MainFrame extends javax.swing.JFrame {
 
 
         top.searchHeader.textField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
             public void insertUpdate(DocumentEvent e) {
                 emit();
             }
 
+            @Override
             public void removeUpdate(DocumentEvent e) {
                 emit();
             }
 
+            @Override
             public void changedUpdate(DocumentEvent e) {
                 emit();
             }
@@ -109,19 +108,16 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        top.noteHeader.addEvent(new HeaderEvent() {
-            @Override
-            public void buttonSelected(int index) {
-                switch (index) {
-                    case 1 -> {
-                        if (onNewNote != null)
-                            onNewNote.run();
-                    }
-                    case 7 -> showSearchView();
-                    case 6 -> {
-                        if (onSave != null)
-                            onSave.run();
-                    }
+        top.noteHeader.addEvent((int index) -> {
+            switch (index) {
+                case 1 -> {
+                    if (onNewNote != null)
+                        onNewNote.run();
+                }
+                case 7 -> showSearchView();
+                case 6 -> {
+                    if (onSave != null)
+                        onSave.run();
                 }
             }
         });

@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 public class AbbreviationModel {
-    private Map<String, String> abbreviationsMap = new HashMap<>();
+    private final Map<String, String> abbreviationsMap = new HashMap<>();
 
-    private String filePath = "src/resource/database/Abbreviations.csv";
+    private final String filePath = "src/resource/database/Abbreviations.csv";
 
     public AbbreviationModel() {
         loadFromFile();

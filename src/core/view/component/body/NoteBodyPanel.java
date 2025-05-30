@@ -21,6 +21,8 @@ public class NoteBodyPanel extends javax.swing.JPanel {
                 content.setColumns(20);
                 content.setForeground(Config.DARKEST);
                 content.setRows(5);
+                content.setLineWrap(true);
+                content.setWrapStyleWord(true);
                 jScrollPane1.setViewportView(content);
                 
                 setNote(note);
