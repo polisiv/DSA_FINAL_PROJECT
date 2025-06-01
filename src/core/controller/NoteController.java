@@ -49,15 +49,17 @@ public class NoteController {
         mainFrame.setOnSave(() -> {
             NoteModel note = mainFrame.getCurrentNote();
             noteService.saveNote(note);
-            updateNoteLists();
-            mainFrame.setNotes(displayedNotes);
+            // updateNoteLists();
+            // mainFrame.setNotes(displayedNotes);
         });
 
 
         mainFrame.setOnNewNote(() -> {
             NoteModel newNote = new NoteModel("N/A", "Untitled Note");
+            notesMap.put(newNote.getNoteId(), newNote);
+            displayedNotes.add(0, newNote);
             noteService.saveNote(newNote);
-            updateNoteLists();
+            // updateNoteLists();
             mainFrame.setNotes(displayedNotes);
             mainFrame.showNoteDetail(newNote);
             addAutoCompleteKeybinding();
@@ -76,7 +78,9 @@ public class NoteController {
        
         mainFrame.setOnDeleteNote(note -> {
             noteService.deleteNote(note);
-            updateNoteLists();
+            displayedNotes.remove(note);
+            notesMap.remove(note.getNoteId());
+            //updateNoteLists();
             mainFrame.setNotes(displayedNotes);
         });
 
@@ -98,10 +102,10 @@ public class NoteController {
 
     }
 
-    private void updateNoteLists() {
-        notesMap = noteService.getAllNotes();
-        displayedNotes = new ArrayList<>(notesMap.values());
-    }
+    // private void updateNoteLists() {
+    //     notesMap = noteService.getAllNotes();
+    //     displayedNotes = new ArrayList<>(notesMap.values());
+    // }
 
     private void addAutoCompleteKeybinding(){
         addSpaceKeybinding();
