@@ -5,19 +5,21 @@ import core.modelservice.NoteFilterType;
 import core.view.component.body.Body;
 import core.view.component.common.FilterPopupMenu;
 import core.view.uiconfig.Config;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class MainFrame extends javax.swing.JFrame {
+
     private Runnable onNewNote;
     private Runnable onSave;
-    private java.util.function.Consumer<String> onSearch;
-    private java.util.function.Consumer<Integer> onNoteSelected;
-    private java.util.function.Consumer<NoteFilterType> onFilterSelected;
+    private Consumer<String> onSearch;
+    private Consumer<Integer> onNoteSelected;
+    private Consumer<NoteFilterType> onFilterSelected;
+
+    private List<NoteModel> displayedNotes;
 
     public void setOnSave(Runnable callback) {
         this.onSave = callback;
@@ -31,20 +33,17 @@ public class MainFrame extends javax.swing.JFrame {
         this.onSearch = callback;
     }
 
-    public void setOnDeleteNote(Consumer<NoteModel> callback) {
-        body.search.noteList.setOnDeleteNote(callback);
-    }
-
     public void setOnNoteSelected(Consumer<Integer> callback) {
         this.onNoteSelected = callback;
     }
-    
+
     public void setOnFilterSelected(Consumer<NoteFilterType> callback) {
         this.onFilterSelected = callback;
     }
 
-
-    private List<NoteModel> displayedNotes;
+    public void setOnDeleteNote(Consumer<NoteModel> callback) {
+        body.search.noteList.setOnDeleteNote(callback);
+    }
 
     public MainFrame() {
         Config.setBlueTheme();
@@ -53,28 +52,13 @@ public class MainFrame extends javax.swing.JFrame {
         setBackground(Config.TRANSPARENT_BLACK);
         getContentPane().setBackground(Config.TRANSPARENT_BLACK);
 
-
+        // Window controls & drag
         top.initWindowControlPanel(MainFrame.this, mainPanel);
         top.initDrag(MainFrame.this);
 
-        top.searchHeader.addEvent((int index) -> {
-            switch (index) {
-                case 1 -> {
-                    if (onNewNote != null)
-                        onNewNote.run();
-                }
-                case 2 -> System.out.println("Search");
-                case 3 -> {
-                    FilterPopupMenu popup = new FilterPopupMenu(filterType -> {
-                        if (onFilterSelected != null) {
-                            onFilterSelected.accept(filterType);
-                        }
-                    });
-                    popup.show(top.searchHeader.filterButton, 0, top.searchHeader.filterButton.getHeight());
-                }
-                case 4 -> {}
-            }
-        });
+        top.searchHeader.addEvent(this::handleSearchHeaderEvent);
+        top.noteHeader.addEvent(this::handleNoteHeaderEvent);
+
         top.searchHeader.setOnBlueThemeSelected(() -> {
             Config.setBlueTheme();
             this.applyTheme();
@@ -84,55 +68,14 @@ public class MainFrame extends javax.swing.JFrame {
             this.applyTheme();
         });
 
-
-        top.searchHeader.textField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                emit();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                emit();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                emit();
-            }
-
-            private void emit() {
-                if (onSearch != null) {
-                    onSearch.accept(top.searchHeader.textField.getText());
-                }
-            }
-        });
-
-        top.noteHeader.addEvent((int index) -> {
-            switch (index) {
-                case 1 -> {
-                    if (onNewNote != null)
-                        onNewNote.run();
-                }
-                case 7 -> showSearchView();
-                case 6 -> {
-                    if (onSave != null)
-                        onSave.run();
-                }
-            }
-        });
+        top.searchHeader.textField.getDocument().addDocumentListener(createSearchListener());
 
         body.search.noteList.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                int index = body.search.noteList.locationToIndex(e.getPoint());
-
-                if (index >= 0 && onNoteSelected != null) {
-                    onNoteSelected.accept(index);
-                }
+                handleNoteListClick(e);
             }
         });
-
         pack();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = screenSize.width - getWidth();
@@ -142,62 +85,9 @@ public class MainFrame extends javax.swing.JFrame {
 
     public void initWithNotes(List<NoteModel> notes) {
         this.displayedNotes = notes;
-        setNotes(notes); // Initially show all
-        showSearchView(); // show view
+        setNotes(notes);
+        showSearchView();
     }
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        mainPanel = new core.view.component.common.RoundPanel();
-        top = new core.view.component.header.Top();
-        body = new core.view.component.body.Body();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
-
-        mainPanel.setBackground(Config.DARKEST);
-
-        top.setPreferredSize(Config.TOP_PREFERRED_SIZE);
-
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-                mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(mainPanelLayout.createSequentialGroup()
-                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(top, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(body, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)));
-        mainPanelLayout.setVerticalGroup(
-                mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(mainPanelLayout.createSequentialGroup()
-                                .addComponent(top, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(body, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)));
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-        layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
 
     private void showSearchView() {
         top.showSearchHeader();
@@ -218,12 +108,12 @@ public class MainFrame extends javax.swing.JFrame {
     public NoteModel getCurrentNote() {
         return body.note.getNote();
     }
-    
+
     public void applyTheme() {
         mainPanel.setBackground(Config.DARKEST);
         top.applyTheme();
         body.applyTheme();
-        revalidate(); 
+        revalidate();
         repaint();
     }
 
@@ -231,9 +121,116 @@ public class MainFrame extends javax.swing.JFrame {
         return body;
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private void handleSearchHeaderEvent(int index) {
+        switch (index) {
+            case 1 -> {
+                if (onNewNote != null) onNewNote.run();
+            }
+            case 2 -> System.out.println("Search"); // Placeholder
+            case 3 -> {
+                FilterPopupMenu popup = new FilterPopupMenu(filterType -> {
+                    if (onFilterSelected != null) {
+                        onFilterSelected.accept(filterType);
+                    }
+                });
+                popup.show(top.searchHeader.filterButton, 0, top.searchHeader.filterButton.getHeight());
+            }
+            case 4 -> { // for theme selection, but i put it in the search header anyway lol
+            }
+        }
+    }
+
+    private void handleNoteHeaderEvent(int index) {
+        switch (index) {
+            case 1 -> {
+                if (onNewNote != null) onNewNote.run();
+            }
+            case 6 -> {
+                if (onSave != null) onSave.run();
+            }
+            case 7 -> showSearchView();
+        }
+    }
+
+    private DocumentListener createSearchListener() {
+        return new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) { emitSearch(); }
+            @Override
+            public void removeUpdate(DocumentEvent e) { emitSearch(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) { emitSearch(); }
+        };
+    }
+
+    private void emitSearch() {
+        if (onSearch != null) {
+            onSearch.accept(top.searchHeader.textField.getText());
+        }
+    }
+
+    private void handleNoteListClick(java.awt.event.MouseEvent e) {
+        int index = body.search.noteList.locationToIndex(e.getPoint());
+        if (index >= 0 && onNoteSelected != null) {
+            onNoteSelected.accept(index);
+        }
+    }
+
+    // === Auto-generated layout ===
+    @SuppressWarnings("unchecked")
+    private void initComponents() {
+        mainPanel = new core.view.component.common.RoundPanel();
+        top = new core.view.component.header.Top();
+        body = new core.view.component.body.Body();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+
+        mainPanel.setBackground(Config.DARKEST);
+        top.setPreferredSize(Config.TOP_PREFERRED_SIZE);
+
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+                mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(top, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(body, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        mainPanelLayout.setVerticalGroup(
+                mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addComponent(top, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(body, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
+    }
+
     private core.view.component.body.Body body;
     private core.view.component.common.RoundPanel mainPanel;
     private core.view.component.header.Top top;
-    // End of variables declaration//GEN-END:variables
 }

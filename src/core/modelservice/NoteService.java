@@ -5,8 +5,10 @@ import core.model.NoteModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 public class NoteService {
     private final Trie searchIndex;
@@ -32,6 +34,8 @@ public class NoteService {
 
     public void saveNote(NoteModel newNote){ 
         // avoids having multiple notes if saved multiple times
+        String cleanedContent = reformat(newNote.getContent());
+        newNote.setContent(cleanedContent);
         db.deleteNote(newNote.getNoteId()); 
         db.saveNote(newNote.getNoteId(), newNote.getTitle(), newNote.getContent());
         indexNote(newNote);
@@ -62,5 +66,55 @@ public class NoteService {
         return query == null || query.trim().isEmpty()
                 ? new ArrayList<>(getAllNotes().values())
                 : searchIndex.searchNotes(query);
+    }
+    public String reformat(String content) {
+        if (content == null || content.isBlank()) {
+        return "";
+        }
+
+        Queue<Character> queue = new LinkedList<>();
+        boolean inWord = false;
+
+        for (char c : content.toCharArray()) {
+            if (c == ' ') {
+                if (inWord) {
+                    queue.add(' ');
+                    inWord = false;
+                }
+            } else {
+                queue.add(c);
+                inWord = true;
+            }
+        }
+
+    // Loại bỏ khoảng trắng cuối nếu có
+        while (!queue.isEmpty() && queue.peek() == ' ') {
+            queue.poll(); // remove leading space
+        }
+
+    // Build result string
+        StringBuilder sb = new StringBuilder();
+        boolean firstChar = true;
+
+        while (!queue.isEmpty()) {
+            char c = queue.poll();
+
+            if (firstChar && Character.isLetter(c)) {
+                if (Character.isLowerCase(c)) {
+                    c = (char)(c - ('a' - 'A')); // thủ công viết hoa
+                }
+                firstChar = false;
+            }
+
+            sb.append(c);
+        }
+
+    // Xoá khoảng trắng cuối
+        int len = sb.length();
+        if (len > 0 && sb.charAt(len - 1) == ' ') {
+            sb.deleteCharAt(len - 1);
+        }
+
+        return sb.toString();
     }
 }

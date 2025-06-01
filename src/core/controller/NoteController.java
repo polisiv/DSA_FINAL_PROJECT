@@ -1,7 +1,9 @@
 package core.controller;
 
-import core.model.AbbreviationModel;
 import core.model.NoteModel;
+import core.modelservice.AbbreviationModel;
+import core.modelservice.BKTree;
+import core.modelservice.DictionaryLoader;
 import core.modelservice.NoteService;
 import core.modelservice.Sorter;
 import core.view.frame.MainFrame;
@@ -28,6 +30,8 @@ public class NoteController {
     private final UndoManager undoManager;
     private boolean isSmartAbbreviationEnabled;
 
+    private BKTree normalWordsBkTree;
+
     public NoteController(MainFrame mainFrame, NoteService noteService, AbbreviationModel abbreviationModel, UndoManager undoManager) {
         this.mainFrame = mainFrame;
         this.noteService = noteService;
@@ -37,6 +41,9 @@ public class NoteController {
     }
 
     public void init() {
+        List<String> dictionaryWords = DictionaryLoader.loadDictionary("src/resource/database/dictionary.txt");
+        normalWordsBkTree = new BKTree(dictionaryWords);
+
         notesMap = noteService.getAllNotes();
         displayedNotes = new ArrayList<>(notesMap.values());
         mainFrame.initWithNotes(displayedNotes);
@@ -53,7 +60,6 @@ public class NoteController {
             // mainFrame.setNotes(displayedNotes);
         });
 
-
         mainFrame.setOnNewNote(() -> {
             NoteModel newNote = new NoteModel("N/A", "Untitled Note");
             notesMap.put(newNote.getNoteId(), newNote);
@@ -68,14 +74,12 @@ public class NoteController {
         mainFrame.setOnSearch(query -> {
             if (query == null || query.isBlank()) {
                 displayedNotes = new ArrayList<>(notesMap.values());
-                //updateNoteLists();
-                mainFrame.setNotes(displayedNotes);
-                return;
+            } else {
+                displayedNotes = noteService.searchNotes(query);
             }
-            displayedNotes = noteService.searchNotes(query);
             mainFrame.setNotes(displayedNotes);
         });
-       
+
         mainFrame.setOnDeleteNote(note -> {
             noteService.deleteNote(note);
             displayedNotes.remove(note);
@@ -97,9 +101,8 @@ public class NoteController {
                 case NEWEST_FIRST -> displayedNotes = Sorter.sort(displayedNotes, "Date Newest");
                 case OLDEST_FIRST -> displayedNotes = Sorter.sort(displayedNotes, "Date Oldest");
             }
-            mainFrame.setNotes(displayedNotes); // Refresh view
+            mainFrame.setNotes(displayedNotes);
         });
-
     }
 
     // private void updateNoteLists() {
@@ -107,7 +110,7 @@ public class NoteController {
     //     displayedNotes = new ArrayList<>(notesMap.values());
     // }
 
-    private void addAutoCompleteKeybinding(){
+    private void addAutoCompleteKeybinding() {
         addSpaceKeybinding();
         addEnterKeybinding();
         addUndoKeybinding();
@@ -117,8 +120,8 @@ public class NoteController {
         boolean isMac = System.getProperty("os.name").toLowerCase().contains("mac");
 
         KeyStroke keyStroke = isMac
-        ? KeyStroke.getKeyStroke("meta shift H")  
-        : KeyStroke.getKeyStroke("control H"); 
+            ? KeyStroke.getKeyStroke("meta shift H")
+            : KeyStroke.getKeyStroke("control H");
 
         InputMap inputMap = mainFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = mainFrame.getRootPane().getActionMap();
@@ -135,108 +138,110 @@ public class NoteController {
 
     private void addSpaceKeybinding() {
         JTextArea textArea = mainFrame.getBody().note.content;
-        KeyStroke spaceKey = KeyStroke.getKeyStroke("SPACE");
-
-        InputMap inputMap = textArea.getInputMap(JComponent.WHEN_FOCUSED);
-        ActionMap actionMap = textArea.getActionMap();
-
-        inputMap.put(spaceKey, "customSpace");
-        actionMap.put("customSpace", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Space key pressed");
-                if (isSmartAbbreviationEnabled) {
-                    triggerAutocomplete();
-                } else {
-                    insertSpace();
-                }
+        addKeyBinding(textArea, KeyStroke.getKeyStroke("SPACE"), "customSpace", () -> {
+            System.out.println("Space key pressed");
+            if (isSmartAbbreviationEnabled) {
+                triggerAutocomplete();
+            } else {
+                insertSpace();
             }
         });
     }
+
     private void addEnterKeybinding() {
         JTextArea textArea = mainFrame.getBody().note.content;
-        KeyStroke enterKey = KeyStroke.getKeyStroke("ENTER");
+        addKeyBinding(textArea, KeyStroke.getKeyStroke("ENTER"), "customEnter", () -> {
+            System.out.println("Enter key pressed");
+            if (isSmartAbbreviationEnabled) {
+                triggerAutocomplete();
+            }
+            insertNewline();
+        });
+    }
 
-        InputMap inputMap = textArea.getInputMap(JComponent.WHEN_FOCUSED);
-        ActionMap actionMap = textArea.getActionMap();
-
-        inputMap.put(enterKey, "customEnter");
-        actionMap.put("customEnter", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Enter key pressed");
-                if (isSmartAbbreviationEnabled) {
-                    triggerAutocomplete(); // expand if needed
-                }
-                insertNewline(); // always insert newline after
+    private void addUndoKeybinding() {
+        JTextArea textArea = mainFrame.getBody().note.content;
+        addKeyBinding(textArea, KeyStroke.getKeyStroke("control Z"), "Undo", () -> {
+            if (undoManager.canUndo()) {
+                undoManager.undo();
             }
         });
     }
 
-private void insertNewline() {
-    try {
-        JTextArea textArea = mainFrame.getBody().note.content;
-        textArea.getDocument().insertString(textArea.getCaretPosition(), "\n", null);
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    }
-}
+    private void addKeyBinding(JComponent component, KeyStroke keyStroke, String actionName, Runnable actionLogic) {
+        InputMap inputMap = component.getInputMap(JComponent.WHEN_FOCUSED);
+        ActionMap actionMap = component.getActionMap();
 
+        inputMap.put(keyStroke, actionName);
+        actionMap.put(actionName, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionLogic.run();
+            }
+        });
+    }
 
     private void triggerAutocomplete() {
-        JTextArea textArea = mainFrame.getBody().note.content;
-        int caretPos = textArea.getCaretPosition();
-        int currentLine;
         try {
-            currentLine = textArea.getLineOfOffset(caretPos);
+            JTextArea textArea = mainFrame.getBody().note.content;
+            int caretPos = textArea.getCaretPosition();
+            int currentLine = textArea.getLineOfOffset(caretPos);
             int lineStartOffset = textArea.getLineStartOffset(currentLine);
             int lineEndOffset = caretPos;
 
             String lineTextBeforeCaret = textArea.getText(lineStartOffset, lineEndOffset - lineStartOffset);
-
             int wordStartInLine = lineTextBeforeCaret.lastIndexOf(' ');
             wordStartInLine = (wordStartInLine == -1) ? 0 : wordStartInLine + 1;
 
             String currentWord = lineTextBeforeCaret.substring(wordStartInLine).trim();
 
-            // System.out.println("Current word (safe): " + currentWord);
-
             if (abbreviationModel.isAbbreviation(currentWord)) {
                 String expansion = abbreviationModel.getExpansion(currentWord);
-
-                // Replace current word in current line only
-                textArea.getDocument().remove(lineStartOffset + wordStartInLine, lineEndOffset - (lineStartOffset + wordStartInLine));
-                textArea.getDocument().insertString(lineStartOffset + wordStartInLine, expansion, null);
+                replaceCurrentWord(textArea, currentLine, wordStartInLine, expansion);
+                return;
             }
+
+            if (normalWordsBkTree != null && !currentWord.isEmpty()) {
+                List<String> corrections = normalWordsBkTree.search(currentWord, 1);
+                boolean alreadyCorrect = corrections.stream().anyMatch(w -> w.equalsIgnoreCase(currentWord));
+
+                if (!alreadyCorrect && !corrections.isEmpty()) {
+                    String correction = corrections.get(0);
+                    replaceCurrentWord(textArea, currentLine, wordStartInLine, correction);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void replaceCurrentWord(JTextArea textArea, int currentLine, int wordStartInLine, String replacement) {
+        try {
+            int lineStartOffset = textArea.getLineStartOffset(currentLine);
+            int caretPos = textArea.getCaretPosition();
+            int lineEndOffset = caretPos;
+
+            textArea.getDocument().remove(lineStartOffset + wordStartInLine, lineEndOffset - (lineStartOffset + wordStartInLine));
+            textArea.getDocument().insertString(lineStartOffset + wordStartInLine, replacement, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void insertTextAtCaret(String text) {
+        try {
+            JTextArea textArea = mainFrame.getBody().note.content;
+            textArea.getDocument().insertString(textArea.getCaretPosition(), text, null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     private void insertSpace() {
-        try {
-            JTextArea textArea = mainFrame.getBody().note.content;
-            textArea.getDocument().insertString(textArea.getCaretPosition(), " ", null);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        insertTextAtCaret(" ");
     }
 
-    private void addUndoKeybinding() {
-        JTextArea textArea = mainFrame.getBody().note.content;
-        KeyStroke undoKey = KeyStroke.getKeyStroke("control Z");
-
-        InputMap inputMap = textArea.getInputMap(JComponent.WHEN_FOCUSED);
-        ActionMap actionMap = textArea.getActionMap();
-
-        inputMap.put(undoKey, "Undo");
-        actionMap.put("Undo", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (undoManager.canUndo()) {
-                    undoManager.undo();
-                }
-            }
-        });
+    private void insertNewline() {
+        insertTextAtCaret("\n");
     }
 }
