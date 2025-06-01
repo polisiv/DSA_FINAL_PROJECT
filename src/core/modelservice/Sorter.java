@@ -13,21 +13,22 @@ public class Sorter {
             case "Alphabetically Ascending":
                 result = alphabeticalSort(displayedNotes);
                 break;
-//            case "Alphabetically Descending":
-//                result = alphabeticalSort(displayedNotes).reverse();
-//                break;
+            case "Alphabetically Descending":
+                result = alphabeticalSort(displayedNotes);
+                Collections.reverse(result);
+                break;
             case "Date Newest":
                 result = dateSort(displayedNotes);
                 break;
-//            case "Date Oldest":
-//                result = dateSort(displayedNotes).reverse();
-//                break;
+            case "Date Oldest":
+                result = dateSort(displayedNotes);
+                Collections.reverse(result);
+                break;
             default:
                 result = displayedNotes;
         }
         return result;
     }
-
 private static final int MIN_RUN = 32;
 
 private static List<NoteModel> alphabeticalSort(List<NoteModel> displayedNotes) {
