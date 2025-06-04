@@ -28,10 +28,6 @@ public class NoteService {
         }
     }
 
-    public void loadNote(){
-        HashMap<String,List<String>> query = db.loadNote();
-    }
-
     public void saveNote(NoteModel newNote){ 
         // avoids having multiple notes if saved multiple times
         String cleanedContent = reformat(newNote.getContent());
@@ -42,9 +38,29 @@ public class NoteService {
     }
 
     public void deleteNote(NoteModel model){
+        if(model == null){return;}
+        removeNoteFromTrie(model);
         db.deleteNote(model.getNoteId());
+
     }
 
+    private void removeNoteFromTrie(NoteModel note) {
+        if(note == null){return;}
+
+        // Remove title words
+        for(String word: note.getTitle().split("\\s+")){
+            if(!word.isEmpty()){
+                searchIndex.delete(word,note);
+            }
+        }
+
+        // Remove content words
+        for(String word: note.getContent().split("\\s+")){
+            if(!word.isEmpty()){
+                searchIndex.delete(word,note);
+            }
+        }
+    }
 
     public void indexNote(NoteModel note) {
         // Index title words

@@ -111,44 +111,44 @@ public class NoteDatabase {
         }
     }
 
-    public HashMap<String, List<String>> loadNote() {
-        try {
-            List<String> lines = Files.readAllLines(file);
-            List<String> temp = new ArrayList<>();
-            String currentId = null;
-            for (String line : lines) {
-                if (line.startsWith("ID: ")) {
-                    // Save the previous note if it exists
-                    if (currentId != null && !temp.isEmpty()) {
-                        noteQuerry.put(currentId, new ArrayList<>(temp));
-                    }
-                    // Start a new note
-                    currentId = line;
-                    temp.clear();
-                }
-                temp.add(line);
-
-                if (line.contains("END")) {
-                    // Save the current note
-                    if (currentId != null) {
-                        noteQuerry.put(currentId, new ArrayList<>(temp));
-                    }
-                    temp.clear();
-                    currentId = null;
-                }
-            }
-
-            return noteQuerry;
-        } catch (IOException e) {
-            System.out.println("""
-                    ****************
-                    NO CONTENT FOUND
-                    ****************
-                    """
-            );
-            return new HashMap<>();
-        }
-    }
+//    public HashMap<String, List<String>> loadNote() {
+//        try {
+//            List<String> lines = Files.readAllLines(file);
+//            List<String> temp = new ArrayList<>();
+//            String currentId = null;
+//            for (String line : lines) {
+//                if (line.startsWith("ID: ")) {
+//                    // Save the previous note if it exists
+//                    if (currentId != null && !temp.isEmpty()) {
+//                        noteQuerry.put(currentId, new ArrayList<>(temp));
+//                    }
+//                    // Start a new note
+//                    currentId = line;
+//                    temp.clear();
+//                }
+//                temp.add(line);
+//
+//                if (line.contains("END")) {
+//                    // Save the current note
+//                    if (currentId != null) {
+//                        noteQuerry.put(currentId, new ArrayList<>(temp));
+//                    }
+//                    temp.clear();
+//                    currentId = null;
+//                }
+//            }
+//
+//            return noteQuerry;
+//        } catch (IOException e) {
+//            System.out.println("""
+//                    ****************
+//                    NO CONTENT FOUND
+//                    ****************
+//                    """
+//            );
+//            return new HashMap<>();
+//        }
+//    }
 
     public Map<String, NoteModel> getAllNotes() {
         Map<String, NoteModel> notes = new LinkedHashMap<>();

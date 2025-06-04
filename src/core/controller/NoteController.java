@@ -61,7 +61,7 @@ public class NoteController {
         });
 
         mainFrame.setOnNewNote(() -> {
-            NoteModel newNote = new NoteModel("N/A", "Untitled Note");
+            NoteModel newNote = new NoteModel("", "");
             notesMap.put(newNote.getNoteId(), newNote);
             displayedNotes.add(0, newNote);
             noteService.saveNote(newNote);

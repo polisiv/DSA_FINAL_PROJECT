@@ -72,6 +72,12 @@ class Trie {
             }
         }
 
+
+        for(NoteModel note : results) {
+            System.out.println(note.getTitle());
+            System.out.println("-------------");
+        }
+
         return new ArrayList<>(results);
     }
 
@@ -110,5 +116,54 @@ class Trie {
                 collectAllNotes(child, results);
             }
         }
+    }
+
+    //Delete function
+    public void delete(String word, NoteModel note) {
+        if (word != null && !word.isBlank()) {
+            deleteHelper(root, word, 0, note);
+        }
+    }
+
+    private void deleteHelper(TrieNode node, String word, int index, NoteModel note) {
+        if (node == null) return;
+
+        // If we've reached the end of the word
+        if (index == word.length()) {
+            if (node.isEnd && node.notes != null) {
+                node.notes.remove(note);
+                // If no notes left, mark as non-end node
+                if (node.notes.isEmpty()) {
+                    node.isEnd = false;
+                    node.notes = null;
+                }
+            }
+            return;
+        }
+
+        char c = word.charAt(index);
+        if (c < ' ' || c > '~') return;
+        int charIndex = c - ' ';
+
+        if (node.children[charIndex] != null) {
+            // Recursively delete from child
+            deleteHelper(node.children[charIndex], word, index + 1, note);
+
+            // Clean up if child node is no longer needed
+            if (!node.children[charIndex].isEnd && !hasChildren(node.children[charIndex])) {
+                node.children[charIndex] = null;
+            }
+        }
+    }
+
+    // Helper method to check if a node has any children
+    private boolean hasChildren(TrieNode node) {
+        if (node == null) return false;
+        for (TrieNode child : node.children) {
+            if (child != null) {
+                return true;
+            }
+        }
+        return false;
     }
 }
