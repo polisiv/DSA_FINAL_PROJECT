@@ -4,20 +4,18 @@
 │   │   ├── core/
 │   │   │   ├── controller/         # Handles user inputs, calls model, passes data to view
 │   │   │   │
-│   │   │   ├── model/              # Data structure & algorithms
+│   │   │   ├── model/              # Logic using the model
 │   │   │   │
-│   │   │   ├── modelservice/     g  # Logic using the model
+│   │   │   ├── modelservice/       # Data structure & algorithms
 │   │   │   │
 │   │   │   ├── view/               # Displays output
 │   │   │   │
 │   │   │   ├── datalayer/          # Handle database
 │   │   │   │
 │   │   ├── resources/
-│   │   │   ├── data/               # Data files
-│   │   │   │
-│   │   │   ├── styles/             # CSS files
-│   │   │   │
-│   │   ├── application/
+│   │   │   ├── database/           # Data files
+│   │   │   |
+│   │   ├── application/            # Main
 │   │   │   ├── Main.java
 
 

@@ -67,6 +67,7 @@ public class NoteService {
                 ? new ArrayList<>(getAllNotes().values())
                 : searchIndex.searchNotes(query);
     }
+
     public String reformat(String content) {
         if (content == null || content.isBlank()) {
         return "";

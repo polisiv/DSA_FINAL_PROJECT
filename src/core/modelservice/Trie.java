@@ -72,10 +72,6 @@ class Trie {
             }
         }
 
-        for(NoteModel note : results) {
-            System.out.println(note.getTitle());
-        }
-        System.out.println("Check");
         return new ArrayList<>(results);
     }
 
@@ -83,6 +79,7 @@ class Trie {
         if(node == null) {
             return;
         }
+        //base case
         if(index == prefix.length()){
             collectAllNotes(node, results);
             return;
@@ -93,6 +90,7 @@ class Trie {
             throw new IllegalArgumentException("Character out of supported range: " + c);
         }
         int charIndex = c - ' ';
+        //recursive case to traverse the trie
         if(node.children[charIndex] != null) {
             searchByPrefix(node.children[charIndex], prefix, index + 1, results);
         }
